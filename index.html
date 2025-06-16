@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Image Archive Data Visualization</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/three@0.140.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.140.0/examples/js/loaders/FontLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.140.0/examples/js/geometries/TextGeometry.js"></script>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: #000000;
+      font-family: 'IBM Plex Mono', monospace;
+      color: #fff;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+    #three-canvas, #compare-canvas {
+      position: fixed;
+      left: 0; top: 0;
+      width: 100vw; height: 100vh;
+      z-index: 0;
+      display: block;
+      background: transparent;
+      border: none;
+      pointer-events: auto;
+    }
+    .header-bar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      font-size: 15px;
+      background: #000000;
+      z-index: 10;
+      border-bottom: 1px solid #222;
+    }
+    .header-bar .center-title {
+      flex: 1;
+      text-align: center;
+      font-size: 1em;
+      color: #fff;
+      letter-spacing: 0.08em;
+    }
+    #infoBox {
+      position:fixed;
+      top:48px;
+      right:32px;
+      max-width:340px;
+      background:none;
+      color:#fff;
+      font-family:'IBM Plex Mono',monospace;
+      font-size:1em;
+      z-index:20;
+      text-align:right;
+      opacity:0.95;
+      pointer-events:none;
+      min-height:48px;
+    }
+    .footer-note {
+      position: fixed;
+      left: 50%;
+      bottom: 10px;
+      transform: translateX(-50%);
+      font-size: 0.85em;
+      color: #bbb;
+      letter-spacing: 0.04em;
+      z-index: 10;
+      text-align: center;
+      max-width: 90vw;
+      pointer-events: none;
+      opacity: 0.5;
+    }
+    #vizTypeLabel {
+      position: fixed;
+      right: 32px;
+      bottom: 32px;
+      background: #181818e6;
+      color: #fff;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 1.08em;
+      padding: 8px 28px;
+      border-radius: 8px;
+      box-shadow: 0 2px 12px #0007;
+      z-index: 30;
+      letter-spacing: 0.04em;
+      opacity: 0.92;
+      pointer-events: none;
+      text-align: right;
+    }
+    /* Side menu e pulsante */
+    #sideMenu {
+      position: fixed;
+      top: 54px;
+      left: 0;
+      width: 370px;
+      max-width: 92vw;
+      background: #181818e6;
+      color: #fff;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 1em;
+      z-index: 30;
+      border-top-right-radius: 14px;
+      border-bottom-right-radius: 14px;
+      box-shadow: 2px 0 18px #0007;
+      padding: 28px 28px 24px 28px;
+      transition: transform 0.3s cubic-bezier(.4,1.6,.4,1), opacity 0.3s;
+      opacity: 0.96;
+      text-align: left;
+      transform: translateX(0);
+    }
+    #closeSideMenu {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 1.5em;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+      z-index: 2;
+    }
+    #openSideMenu {
+      position: fixed;
+      top: 60px;
+      left: 0;
+      z-index: 31;
+      background: #0077ff;
+      color: #fff;
+      border: none;
+      border-top-right-radius: 8px;
+      border-bottom-right-radius: 8px;
+      font-size: 1.5em;
+      padding: 8px 16px 8px 12px;
+      cursor: pointer;
+      box-shadow: 2px 0 10px #0005;
+      opacity: 0.85;
+      transition: opacity 0.2s;
+      display: none;
+    }
+    #openSideMenu span {
+      display:inline-block; width:0; height:0; border-top:10px solid transparent; border-bottom:10px solid transparent; border-left:14px solid #fff; vertical-align:middle;
+    }
+    /* Overlay introduttivo */
+    #intro-overlay {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1000;
+      background: rgba(0,0,0,0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transition: opacity 0.7s;
+    }
+    #intro-overlay > div {
+      color: #fff;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 1.3em;
+      text-align: center;
+      max-width: 480px;
+      background: none;
+      border-radius: 12px;
+      padding: 36px 32px 32px 32px;
+      box-shadow: 0 4px 32px #000a;
+      opacity: 0.98;
+    }
+    #intro-overlay h2 {
+      margin-top: 0;
+      font-size: 1.7em;
+      font-weight: bold;
+      letter-spacing: 0.04em;
+    }
+    #intro-overlay p {
+      opacity: 0.7;
+    }
+    #startBtn {
+      margin-top: 22px;
+      background: #ffffff00;
+      color: #ffffff;
+      border: 1px solid #ffffff;
+      border-radius: 7px;
+      font-size: 1.0em;
+      font-family: inherit;
+      font-weight: regular;
+      padding: 12px 38px;
+      cursor: pointer;
+      box-shadow: 0 2px 8px #0005;
+      transition: background 0.2s;
+    }
+    /* Area ridotta per bloccare la rotazione automatica */
+    #interaction-area {
+      position:fixed;
+      left:50%;
+      top:50%;
+      width:90px;
+      height:90px;
+      transform:translate(-50%,-50%);
+      z-index:2;
+      background:none;
+      pointer-events:auto;
+    }
+    @media (max-width: 900px) {
+      #sideMenu { width: 180px; padding: 12px 8px 8px 8px; }
+      .footer-note { left: 8px; max-width: 90vw; }
+    }
+    @media (max-width: 600px) {
+      #sideMenu { display: none; }
+      .footer-note { left: 4px; bottom: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="three-canvas"></canvas>
+  <div id="infoBox">
+    <span class="info-placeholder" style="opacity:0.6;font-style:italic;">
+      Clicca su un tubo per vedere i dettagli della foto.
+    </span>
+  </div>
+  <div class="header-bar">
+    <span class="center-title">Photographic Data Comparison Between Two Locations</span>
+  </div>
+  <div id="vizTypeLabel">
+    Visualizzazione attuale: <b>generic overview</b>
+  </div>
+  <div id="sideMenu">
+    <button id="closeSideMenu" title="Chiudi menu" aria-label="Chiudi menu">&times;</button>
+    <b>Funzionamento visualizzazione</b> <br><br>
+    <div style="margin-top:4px;">
+      Ogni tubo rappresenta una foto e la sua posizione e direzione nello spazio 3D sono determinate da <b>hue</b>, <b>brightness</b> ed <b>exposure</b>, mappati su coordinate sferiche e poi convertiti in coordinate cartesiane.<br>
+      <br>
+      <b>Come interagire:</b><br>
+      <ul style="margin: 8px 0 0 18px; padding: 0; font-size: 0.97em;">
+        <li><b>Muovi il mouse</b> sopra il quadrato centrale per bloccare la rotazione automatica.</li>
+        <li><b>Trascina</b> con il mouse per ruotare la visualizzazione 3D.</li>
+        <li><b>Usa la rotellina</b> del mouse per zoomare avanti e indietro.</li>
+        <li><b>Clicca su un tubo</b> per vedere i dettagli della foto a destra.</li>
+        <li><b>Passa il mouse</b> sopra un tubo per evidenziarlo.</li>
+      </ul>
+      <div style="margin-top:18px; background:#232323; color:#fff; border-radius:8px; padding:12px 18px; font-size:1em; box-shadow:0 2px 12px #0007;">
+        Dopo aver analizzato la visualizzazione generale puoi entrare nel vivo del sito: <b>inizia il confronto tra i dati dei due periodi</b> per scoprire le differenze tra i contesti fotografici.
+      </div>
+      <button id="compareBtn" style="
+        margin-top:14px;
+        background: #0077ff;
+        color: #fff;
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 1.08em;
+        padding: 10px 28px;
+        border-radius: 8px;
+        border: none;
+        box-shadow: 0 2px 12px #0007;
+        letter-spacing: 0.04em;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background 0.2s;
+        display: block;
+      ">
+        Avvia confronto tra periodi
+      </button>
+    </div>
+  </div>
+  <button id="openSideMenu" title="Apri menu" aria-label="Apri menu">
+    <span style="display:inline-block; width:0; height:0; border-top:10px solid transparent; border-bottom:10px solid transparent; border-left:14px solid #fff; vertical-align:middle;"></span>
+  </button>
+  <div class="footer-note">
+    &copy; 2025 - Me, myself and AI - CV429.01 - Interaction design SP24/25.
+  </div>
+  <div id="intro-overlay">
+    <div>
+      <h2 style="margin-top:0;font-size:1.4em;font-weight:bold;letter-spacing:0.04em;">Photographic Data Comparison Between Two Locations</h2>
+      <p>
+        Welcome!<br>
+        <br>
+        This website presents interactive visualizations based on data extracted from 4,392 photographs taken across two geographical and temporal contexts: Naples (2017–2022) and Ticino (2022–present).<br>
+        <br>
+        Following an overview of the most relevant metadata, the site focuses on a comparative and creative exploration of key technical parameters — including ISO, exposure time, brightness, hue, and one distinctive variable of interest — to investigate how photographic data can reflect changes in context and perspective.
+        <br>
+        <br>
+        <span style="opacity:0.7;">
+          Premi <b>START</b> per entrare e interagire con la visualizzazione.<br>
+          Puoi ruotare e zoomare il grafico 3D.<br>
+        </span>
+      </p>
+      <button id="startBtn" style="
+        margin-top:22px; 
+        background:#ffffff00; 
+        color:#ffffff; 
+        border: 1px solid #ffffff; 
+        border-radius:7px; 
+        font-size:1.0em; 
+        font-family:inherit; 
+        font-weight: regular ; 
+        padding:12px 38px; 
+        cursor:pointer; 
+        box-shadow:0 2px 8px #0005;
+        transition:background 0.2s;
+      ">START</button>
+    </div>
+  </div>
+  <div id="interaction-area"></div>
+  <script>
+    // --- Variabili globali ---
+    let globalData = null;
+    let isCompareMode = false;
+    let mainThree = null; // per gestire la scena principale
+    let compareThree = null; // per gestire la scena di confronto
+
+    // --- Funzioni di utilità colore ---
+    function hexToRgb(hex) {
+      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+      } : { r: 255, g: 255, b: 255 };
+    }
+    function computeBrightness(rgb) {
+      return (0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b) / 255;
+    }
+    function hexToHSL(hex) {
+      const rgb = hexToRgb(hex);
+      let r = rgb.r / 255, g = rgb.g / 255, b = rgb.b / 255;
+      const max = Math.max(r, g, b), min = Math.min(r, g, b);
+      let h, s, l = (max + min) / 2;
+      if (max !== min) {
+        const d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch (max) {
+          case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+          case g: h = (b - r) / d + 2; break;
+          case b: h = (r - g) / d + 4; break;
+        }
+        h *= 60;
+      } else {
+        h = s = 0;
+      }
+      return { h };
+    }
+
+    // --- Etichette 3D per assi ---
+    function add3DAxesToGroup(group, length = 800) {
+      const axisMat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.3 });
+      // X
+      const xGeom = new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(-length, 0, 0),
+        new THREE.Vector3(length, 0, 0)
+      ]);
+      group.add(new THREE.Line(xGeom, axisMat));
+      // Y
+      const yGeom = new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(0, -length, 0),
+        new THREE.Vector3(0, length, 0)
+      ]);
+      group.add(new THREE.Line(yGeom, axisMat));
+      // Z
+      const zGeom = new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(0, 0, -length),
+        new THREE.Vector3(0, 0, length)
+      ]);
+      group.add(new THREE.Line(zGeom, axisMat));
+
+      // Etichette 3D per entrambi i lati degli assi
+      const loader = new THREE.FontLoader();
+      loader.load('https://cdn.jsdelivr.net/npm/three@0.140.0/examples/fonts/helvetiker_regular.typeface.json', function (font) {
+        const textMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.5 });
+        const textSize = 32;
+        const textHeight = 1.5;
+
+        // X+
+        let textGeo = new THREE.TextGeometry('Hue', { font, size: textSize, height: textHeight });
+        let textMesh = new THREE.Mesh(textGeo, textMat);
+        textMesh.position.set(length + 30, 0, 0);
+        textMesh.lookAt(0, 0, 0);
+        group.add(textMesh);
+
+        // X-
+        textGeo = new THREE.TextGeometry('-Hue', { font, size: textSize, height: textHeight });
+        textMesh = new THREE.Mesh(textGeo, textMat);
+        textMesh.position.set(-length - 90, 0, 0);
+        textMesh.lookAt(0, 0, 0);
+        group.add(textMesh);
+
+        // Y+
+        textGeo = new THREE.TextGeometry('Brightness', { font, size: textSize, height: textHeight });
+        textMesh = new THREE.Mesh(textGeo, textMat);
+        textMesh.position.set(0, length + 30, 0);
+        textMesh.lookAt(0, 0, 0);
+        group.add(textMesh);
+
+        // Y-
+        textGeo = new THREE.TextGeometry('-Brightness', { font, size: textSize, height: textHeight });
+        textMesh = new THREE.Mesh(textGeo, textMat);
+        textMesh.position.set(0, -length - 90, 0);
+        textMesh.lookAt(0, 0, 0);
+        group.add(textMesh);
+
+        // Z+
+        textGeo = new THREE.TextGeometry('Exposure', { font, size: textSize, height: textHeight });
+        textMesh = new THREE.Mesh(textGeo, textMat);
+        textMesh.position.set(0, 0, length + 30);
+        textMesh.lookAt(0, 0, 0);
+        group.add(textMesh);
+
+        // Z-
+        textGeo = new THREE.TextGeometry('-Exposure', { font, size: textSize, height: textHeight });
+        textMesh = new THREE.Mesh(textGeo, textMat);
+        textMesh.position.set(0, 0, -length - 140);
+        textMesh.lookAt(0, 0, 0);
+        group.add(textMesh);
+      });
+    }
+
+    // --- Visualizzazione 3D principale ---
+    function startThreeExplode(data) {
+      // Rimuovi eventuale canvas di confronto
+      let compareCanvas = document.getElementById('compare-canvas');
+      if (compareCanvas) {
+        compareCanvas.parentNode.removeChild(compareCanvas);
+        compareThree = null;
+      }
+      // Mostra canvas principale
+      const canvas = document.getElementById('three-canvas');
+      canvas.style.display = "block";
+
+      // Pulizia: cancella eventuali renderer precedenti
+      if (mainThree && mainThree.renderer) {
+        mainThree.renderer.dispose();
+        mainThree = null;
+      }
+
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+      renderer.setClearColor(0x111111, 0);
+      renderer.setSize(window.innerWidth, window.innerHeight);
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 3000);
+      camera.position.z = 1700;
+
+      const group = new THREE.Group();
+      scene.add(group);
+
+      add3DAxesToGroup(group, 800);
+
+      let tubeMeshes = [];
+
+      // Crea i tubi per ogni immagine
+      const rMin = 150;
+      data.forEach((entry, idx) => {
+        const color = entry.colors?.[0] || "#ffffff";
+        const rgb = hexToRgb(color);
+        const hsl = hexToHSL(color);
+        const brightness = computeBrightness(rgb);
+        const exposure = parseFloat(entry.ExposureTime) || 0.01;
+
+        const theta = THREE.MathUtils.degToRad(hsl.h);
+        const phi = brightness * Math.PI;
+        const r = rMin + Math.log10(1 / (exposure + 0.0001)) * 100;
+
+        const x = r * Math.sin(phi) * Math.cos(theta);
+        const y = r * Math.cos(phi);
+        const z = r * Math.sin(phi) * Math.sin(theta);
+
+        const start = new THREE.Vector3(0, 0, 0);
+        const mid = new THREE.Vector3(x / 2, y / 2, z / 2 + brightness * 40);
+        const end = new THREE.Vector3(x, y, z);
+        const curve = new THREE.CatmullRomCurve3([start, mid, end]);
+
+        const geometry = new THREE.TubeGeometry(curve, 64, 1.5, 8, false);
+        const material = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.6 });
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.userData = { entry, idx, baseColor: color };
+        group.add(mesh);
+        tubeMeshes.push(mesh);
+      });
+
+      let isDragging = false, lastX = 0, lastY = 0;
+      let rotX = 0, rotY = 0, zoom = camera.position.z;
+      let autoRotate = true;
+      let autoRotY = 0.003;
+      let autoRotX = 0.001;
+      let hoveredMesh = null;
+      let selectedMesh = null;
+
+      // Blocca la rotazione automatica SOLO quando il mouse è sopra l'area centrale ridotta
+      const interactionArea = document.getElementById('interaction-area');
+      let isOverInteractionArea = false;
+      interactionArea.addEventListener('mouseenter', () => {
+        isOverInteractionArea = true;
+        autoRotate = false;
+      });
+      interactionArea.addEventListener('mouseleave', () => {
+        isOverInteractionArea = false;
+        if (!isDragging) autoRotate = true;
+      });
+
+      canvas.addEventListener('pointerdown', e => { 
+        isDragging = true; 
+        lastX = e.clientX; 
+        lastY = e.clientY; 
+      });
+      window.addEventListener('pointerup', () => { 
+        isDragging = false; 
+        if (!isOverInteractionArea) autoRotate = true;
+      });
+      window.addEventListener('pointermove', e => {
+        if (!isDragging) return;
+        rotY += (e.clientX - lastX) * 0.01;
+        rotX += (e.clientY - lastY) * 0.01;
+        lastX = e.clientX; lastY = e.clientY;
+      });
+      canvas.addEventListener("wheel", e => {
+        e.preventDefault();
+        zoom += e.deltaY * 2;
+        zoom = Math.max(400, Math.min(3000, zoom));
+      }, { passive: false });
+
+      // Funzione per aggiornare l'opacità e l'aspetto dei tubi
+      function updateTubesOpacity() {
+        tubeMeshes.forEach(mesh => {
+          if (selectedMesh) {
+            if (mesh === selectedMesh) {
+              mesh.material.opacity = 1.0;
+              mesh.material.color.set(0xffff00); // selezionato: giallo
+              mesh.scale.set(1.5, 1.5, 1.5);
+            } else if (mesh === hoveredMesh) {
+              mesh.material.opacity = 0.7;
+              mesh.material.color.set(mesh.userData.baseColor);
+              mesh.scale.set(1.2, 1.2, 1.2);
+            } else {
+              mesh.material.opacity = 0.15;
+              mesh.material.color.set(mesh.userData.baseColor);
+              mesh.scale.set(1, 1, 1);
+            }
+          } else if (hoveredMesh) {
+            if (mesh === hoveredMesh) {
+              mesh.material.opacity = 0.9;
+              mesh.material.color.set(0x00ffff); // hover: ciano
+              mesh.scale.set(1.2, 1.2, 1.2);
+            } else {
+              mesh.material.opacity = 0.15;
+              mesh.material.color.set(mesh.userData.baseColor);
+              mesh.scale.set(1, 1, 1);
+            }
+          } else {
+            mesh.material.opacity = 0.6;
+            mesh.material.color.set(mesh.userData.baseColor);
+            mesh.scale.set(1, 1, 1);
+          }
+        });
+      }
+
+      // --- INTERAZIONE: RAYCASTER PER SELEZIONE E HOVER ---
+      const raycaster = new THREE.Raycaster();
+      const mouse = new THREE.Vector2();
+
+      canvas.addEventListener('pointerdown', function(e) {
+        const rect = canvas.getBoundingClientRect();
+        mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObjects(tubeMeshes);
+
+        if (intersects.length > 0) {
+          selectedMesh = intersects[0].object;
+          showTubeInfo(selectedMesh.userData.entry);
+        } else {
+          selectedMesh = null;
+        }
+        updateTubesOpacity();
+      });
+
+      canvas.addEventListener('pointermove', function(e) {
+        const rect = canvas.getBoundingClientRect();
+        mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObjects(tubeMeshes);
+
+        let newHovered = intersects.length > 0 ? intersects[0].object : null;
+        if (hoveredMesh !== newHovered) {
+          hoveredMesh = newHovered;
+          updateTubesOpacity();
+        }
+      });
+
+      canvas.addEventListener('mouseleave', function() {
+        hoveredMesh = null;
+        updateTubesOpacity();
+      });
+
+      updateTubesOpacity();
+
+      function showTubeInfo(entry) {
+        const infoBox = document.getElementById('infoBox');
+        infoBox.innerHTML = `
+          <div>
+            <b>Hue:</b> ${entry.colors ? hexToHSL(entry.colors[0]).h.toFixed(1) : 'N/A'}<br>
+            <b>Brightness:</b> ${entry.colors ? computeBrightness(hexToRgb(entry.colors[0])).toFixed(2) : 'N/A'}<br>
+            <b>Exposure:</b> ${entry.ExposureTime || 'N/A'}<br>
+            <b>Colore dominante:</b> <span style="display:inline-block;width:18px;height:18px;background:${entry.colors ? entry.colors[0] : '#fff'};border-radius:3px;vertical-align:middle;margin-left:4px;"></span> ${entry.colors ? entry.colors[0] : 'N/A'}
+          </div>
+        `;
+      }
+
+      function resize() {
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      function animate() {
+        requestAnimationFrame(animate);
+        if (autoRotate) {
+          rotY += autoRotY;
+          rotX += autoRotX * Math.sin(rotY * 0.5);
+        }
+        group.rotation.x = rotX;
+        group.rotation.y = rotY;
+        camera.position.z += (zoom - camera.position.z) * 0.1;
+        renderer.render(scene, camera);
+      }
+      animate();
+
+      // Salva riferimenti per pulizia
+      mainThree = { renderer, scene, camera, group };
+    }
+
+    // --- Split dati per periodo ---
+    function splitDataByPeriod(data) {
+      // Adatta questi controlli ai tuoi dati reali!
+      const napoli = data.filter(d => (d.Periodo && d.Periodo.toLowerCase().includes("napoli")) || (d.Luogo && d.Luogo.toLowerCase().includes("napoli")));
+      const ticino = data.filter(d => (d.Periodo && d.Periodo.toLowerCase().includes("ticino")) || (d.Luogo && d.Luogo.toLowerCase().includes("ticino")));
+      return { napoli, ticino };
+    }
+
+    // --- Visualizzazione 3D di confronto ---
+    function startThreeCompare(data) {
+      // Rimuovi canvas principale
+      const oldCanvas = document.getElementById('three-canvas');
+      oldCanvas.style.display = "none";
+      // Rimuovi eventuale canvas di confronto precedente
+      let compareCanvas = document.getElementById('compare-canvas');
+      if (compareCanvas) {
+        compareCanvas.parentNode.removeChild(compareCanvas);
+      }
+      // Crea nuovo canvas
+      compareCanvas = document.createElement('canvas');
+      compareCanvas.id = 'compare-canvas';
+      compareCanvas.style.position = 'fixed';
+      compareCanvas.style.left = '0';
+      compareCanvas.style.top = '0';
+      compareCanvas.style.width = '100vw';
+      compareCanvas.style.height = '100vh';
+      compareCanvas.style.zIndex = '0';
+      compareCanvas.style.background = 'transparent';
+      document.body.appendChild(compareCanvas);
+      compareCanvas.width = window.innerWidth;
+      compareCanvas.height = window.innerHeight;
+      compareCanvas.style.display = "block";
+
+      // Pulizia: cancella eventuali renderer precedenti
+      if (compareThree && compareThree.renderer) {
+        compareThree.renderer.dispose();
+        compareThree = null;
+      }
+
+      // Split dei dati
+      const { napoli, ticino } = splitDataByPeriod(data);
+
+      // Setup renderer, camera, scene
+      const renderer = new THREE.WebGLRenderer({ canvas: compareCanvas, antialias: true, alpha: true });
+      renderer.setClearColor(0x111111, 0);
+      renderer.setSize(window.innerWidth, window.innerHeight);
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 3000);
+      camera.position.z = 1700;
+
+      // Gruppi separati
+      const groupNapoli = new THREE.Group();
+      const groupTicino = new THREE.Group();
+      scene.add(groupNapoli);
+      scene.add(groupTicino);
+
+      // Etichette assi per entrambi i gruppi
+      add3DAxesToGroup(groupNapoli, 800);
+      add3DAxesToGroup(groupTicino, 800);
+
+      // Funzione per creare tubi
+      function createTubes(group, data, colorOverride) {
+        const rMin = 150;
+        data.forEach((entry, idx) => {
+          const color = entry.colors?.[0] || colorOverride || "#ffffff";
+          const rgb = hexToRgb(color);
+          const hsl = hexToHSL(color);
+          const brightness = computeBrightness(rgb);
+          const exposure = parseFloat(entry.ExposureTime) || 0.01;
+
+          const theta = THREE.MathUtils.degToRad(hsl.h);
+          const phi = brightness * Math.PI;
+          const r = rMin + Math.log10(1 / (exposure + 0.0001)) * 100;
+
+          const x = r * Math.sin(phi) * Math.cos(theta);
+          const y = r * Math.cos(phi);
+          const z = r * Math.sin(phi) * Math.sin(theta);
+
+          const start = new THREE.Vector3(0, 0, 0);
+          const mid = new THREE.Vector3(x / 2, y / 2, z / 2 + brightness * 40);
+          const end = new THREE.Vector3(x, y, z);
+          const curve = new THREE.CatmullRomCurve3([start, mid, end]);
+
+          const geometry = new THREE.TubeGeometry(curve, 64, 1.5, 8, false);
+          const material = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.6 });
+          const mesh = new THREE.Mesh(geometry, material);
+          group.add(mesh);
+        });
+      }
+
+      // Crea i tubi per entrambi i periodi
+      createTubes(groupNapoli, napoli);
+      createTubes(groupTicino, ticino);
+
+      // Animazione di split: i gruppi partono dal centro e si separano verso sx/dx
+      let splitProgress = 0; // 0 = centro, 1 = completamente separati
+      const splitTarget = 600; // distanza finale dal centro
+      let animating = true;
+
+      function animate() {
+        requestAnimationFrame(animate);
+
+        if (animating && splitProgress < 1) {
+          splitProgress += 0.025; // velocità animazione
+          if (splitProgress > 1) splitProgress = 1;
+        }
+
+        // Applica la separazione smooth
+        groupNapoli.position.x = -splitTarget * Math.sin((Math.PI / 2) * splitProgress);
+        groupTicino.position.x = splitTarget * Math.sin((Math.PI / 2) * splitProgress);
+
+        renderer.render(scene, camera);
+      }
+      animate();
+
+      // Resize responsive
+      function resize() {
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      // Salva riferimenti per pulizia
+      compareThree = { renderer, scene, camera, groupNapoli, groupTicino };
+    }
+
+    // --- GESTIONE CONFRONTO PERIODI ---
+    function startCompareView() {
+      isCompareMode = true;
+      // Nascondi tutto il resto (menu, info, ecc)
+      document.getElementById('sideMenu').style.display = "none";
+      document.getElementById('infoBox').style.display = "none";
+      document.getElementById('vizTypeLabel').innerHTML = 'Visualizzazione attuale: <b>confronto Napoli / Ticino</b>';
+
+      // Prendi il gruppo principale della scena 3D
+      if (!mainThree || !mainThree.group) return;
+
+      // Split dei dati
+      const { napoli, ticino } = splitDataByPeriod(globalData);
+
+      // Prepara set di id per riconoscere i periodi
+      const napoliSet = new Set(napoli.map(e => e.id || e.ID || e.idx));
+      const ticinoSet = new Set(ticino.map(e => e.id || e.ID || e.idx));
+
+      // Seleziona solo i tubi (Mesh che NON sono TextGeometry)
+      const meshes = mainThree.group.children.filter(obj =>
+        obj.type === "Mesh" && (!obj.geometry.type || obj.geometry.type !== "TextGeometry")
+      );
+
+      // Nascondi assi e etichette (Line e TextGeometry)
+      mainThree.group.children.forEach(obj => {
+        if (obj.type === "Line" ||
+            (obj.type === "Mesh" && obj.geometry && obj.geometry.type === "TextGeometry")) {
+          obj.visible = false;
+        }
+      });
+
+      // Animazione di split
+      let splitProgress = 0;
+      const splitTarget = 600;
+      function animateSplit() {
+        splitProgress += 0.025;
+        if (splitProgress > 1) splitProgress = 1;
+
+        meshes.forEach(mesh => {
+          const entry = mesh.userData.entry;
+          const id = entry.id || entry.ID || entry.idx;
+          let direction = 0;
+          if (napoliSet.has(id)) direction = -1;
+          else if (ticinoSet.has(id)) direction = 1;
+          mesh.position.x = direction * splitTarget * Math.sin((Math.PI / 2) * splitProgress);
+        });
+
+        mainThree.renderer.render(mainThree.scene, mainThree.camera);
+
+        if (splitProgress < 1) {
+          requestAnimationFrame(animateSplit);
+        }
+      }
+      animateSplit();
+    }
+
+    // --- Caricamento dati e avvio ---
+    fetch("assets/dataset_fotografie_completo.json")
+      .then(res => res.json())
+      .then(json => {
+        globalData = Array.isArray(json) ? json : json.all;
+        startThreeExplode(globalData);
+      });
+
+    // --- Overlay START ---
+    document.addEventListener("DOMContentLoaded", function() {
+      var startBtn = document.getElementById('startBtn');
+      if (startBtn) {
+        startBtn.onclick = function() {
+          var overlay = document.getElementById('intro-overlay');
+          overlay.style.opacity = 0;
+          setTimeout(function() {
+            overlay.style.display = "none";
+            document.body.style.overflow = "";
+          }, 700);
+        };
+      }
+      // Side menu
+      const sideMenu = document.getElementById('sideMenu');
+      const openBtn = document.getElementById('openSideMenu');
+      const closeBtn = document.getElementById('closeSideMenu');
+      function closeMenu() {
+        sideMenu.style.transform = 'translateX(-110%)';
+        sideMenu.style.opacity = '0.2';
+        openBtn.style.display = 'block';
+      }
+      function openMenu() {
+        sideMenu.style.transform = 'translateX(0)';
+        sideMenu.style.opacity = '0.96';
+        openBtn.style.display = 'none';
+      }
+      closeBtn.addEventListener('click', closeMenu);
+      openBtn.addEventListener('click', openMenu);
+      sideMenu.style.transform = 'translateX(0)';
+      sideMenu.style.opacity = '0.96';
+      openBtn.style.display = 'none';
+
+      // Bottone confronto
+      const btn = document.getElementById('compareBtn');
+      if (btn) btn.onclick = startCompareView;
+    });
+  </script>
+</body>
+</html>
