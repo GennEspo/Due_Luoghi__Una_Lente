@@ -16,18 +16,43 @@
       font-family: 'IBM Plex Mono', monospace;
       color: #fff;
       box-sizing: border-box;
-      overflow: hidden;
+      overflow-x: hidden;
+      overflow-y: auto;
+      font-size: 13px;
     }
     #three-canvas, #compare-canvas {
       position: fixed;
       left: 0; top: 0;
-      width: 100vw; height: 100vh;
+      width: 100dvw; height: 100dvh;
       z-index: 0;
       display: block;
       background: transparent;
       border: none;
       pointer-events: auto;
+      /* Migliora performance animazioni 3D */
+      will-change: transform, opacity;
     }
+
+    #startBtn {
+    margin-top: 22px;
+    background: #0077ff;
+    color: #ffffff;
+    border: 1px solid #ffffff;
+    border-radius: 7px;
+    font-size: 1em;
+    font-family: inherit;
+    font-weight: normal;
+    padding: 12px 38px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px #0005;
+    transition: background 0.25s ease, transform 0.2s ease;
+  }
+
+  #startBtn:hover {
+    background: #3399ff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px #0006;
+  }
     .header-bar {
       position: fixed;
       top: 0; left: 0; right: 0;
@@ -36,7 +61,7 @@
       align-items: center;
       justify-content: space-between;
       padding: 0 24px;
-      font-size: 15px;
+      font-size: 0.95em;
       background: #000000;
       z-index: 10;
       border-bottom: 1px solid #222;
@@ -44,7 +69,7 @@
     .header-bar .center-title {
       flex: 1;
       text-align: center;
-      font-size: 1em;
+      font-size: 0.95em;
       color: #fff;
       letter-spacing: 0.08em;
     }
@@ -56,7 +81,7 @@
       background:none;
       color:#fff;
       font-family:'IBM Plex Mono',monospace;
-      font-size:1em;
+      font-size:0.93em;
       z-index:20;
       text-align:right;
       opacity:0.95;
@@ -68,7 +93,7 @@
       left: 50%;
       bottom: 10px;
       transform: translateX(-50%);
-      font-size: 0.85em;
+      font-size: 0.8em;
       color: #bbb;
       letter-spacing: 0.04em;
       z-index: 10;
@@ -77,39 +102,23 @@
       pointer-events: none;
       opacity: 0.5;
     }
-    #vizTypeLabel {
-      position: fixed;
-      right: 32px;
-      bottom: 32px;
-      background: #181818e6;
-      color: #fff;
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 1.08em;
-      padding: 8px 28px;
-      border-radius: 8px;
-      box-shadow: 0 2px 12px #0007;
-      z-index: 30;
-      letter-spacing: 0.04em;
-      opacity: 0.92;
-      pointer-events: none;
-      text-align: right;
-    }
     /* Side menu e pulsante */
     #sideMenu {
       position: fixed;
       top: 54px;
       left: 0;
-      width: 370px;
-      max-width: 92vw;
+      width: 240px;
+      max-width: 80vw;
+      min-width: 120px;
       background: #181818e6;
       color: #fff;
       font-family: 'IBM Plex Mono', monospace;
-      font-size: 1em;
+      font-size: 0.93em;
       z-index: 30;
       border-top-right-radius: 14px;
       border-bottom-right-radius: 14px;
       box-shadow: 2px 0 18px #0007;
-      padding: 28px 28px 24px 28px;
+      padding: 18px 14px 14px 14px;
       transition: transform 0.3s cubic-bezier(.4,1.6,.4,1), opacity 0.3s;
       opacity: 0.96;
       text-align: left;
@@ -122,7 +131,7 @@
       background: none;
       border: none;
       color: #fff;
-      font-size: 1.5em;
+      font-size: 1em;
       cursor: pointer;
       opacity: 0.7;
       transition: opacity 0.2s;
@@ -168,61 +177,218 @@
     #intro-overlay > div {
       color: #fff;
       font-family: 'IBM Plex Mono', monospace;
-      font-size: 1.3em;
+      font-size: 0.95em;
       text-align: center;
-      max-width: 480px;
+      max-width: 300px;
       background: none;
       border-radius: 12px;
-      padding: 36px 32px 32px 32px;
+      padding: 18px 6px 14px 6px;
       box-shadow: 0 4px 32px #000a;
       opacity: 0.98;
     }
     #intro-overlay h2 {
       margin-top: 0;
-      font-size: 1.7em;
+      font-size: 1.1em;
       font-weight: bold;
       letter-spacing: 0.04em;
     }
     #intro-overlay p {
       opacity: 0.7;
+      font-size: 0.95em;
     }
-    #startBtn {
-      margin-top: 22px;
-      background: #ffffff00;
-      color: #ffffff;
-      border: 1px solid #ffffff;
-      border-radius: 7px;
-      font-size: 1.0em;
-      font-family: inherit;
-      font-weight: regular;
-      padding: 12px 38px;
-      cursor: pointer;
-      box-shadow: 0 2px 8px #0005;
-      transition: background 0.2s;
-    }
-    /* Area ridotta per bloccare la rotazione automatica */
-    #interaction-area {
-      position:fixed;
-      left:50%;
-      top:50%;
-      width:90px;
-      height:90px;
-      transform:translate(-50%,-50%);
-      z-index:2;
-      background:none;
-      pointer-events:auto;
+    @media (max-width: 600px) {
+      #intro-overlay > div {
+        font-size: 0.92em;
+        max-width: 98vw;
+        padding: 10vw 2vw 8vw 2vw;
+      }
+      #intro-overlay h2 {
+        font-size: 1.05em;
+      }
     }
     @media (max-width: 900px) {
       #sideMenu { width: 180px; padding: 12px 8px 8px 8px; }
       .footer-note { left: 8px; max-width: 90vw; }
     }
     @media (max-width: 600px) {
-      #sideMenu { display: none; }
+      #sideMenu {
+        width: 98vw;
+        max-width: 98vw;
+        min-width: unset;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+        padding: 10px 4vw 8px 4vw;
+      }
       .footer-note { left: 4px; bottom: 4px; }
     }
+    /* Responsive fix per mobile viewport dinamica */
+    @media (max-width: 900px), (max-height: 600px) {
+      #three-canvas, #compare-canvas {
+        width: 100dvw;
+        height: 100dvh;
+      }
+    }
+    /* Rimuovi la griglia desktop a 3 colonne e ripristina layout originale */
+    .main-grid, .side-menu-col, .canvas-col, .info-col {
+      display: unset !important;
+      grid-template-columns: unset !important;
+      grid-template-rows: unset !important;
+      grid-column: unset !important;
+      flex-direction: unset !important;
+      align-items: unset !important;
+      justify-content: unset !important;
+      padding: unset !important;
+      overflow: unset !important;
+      position: unset !important;
+      height: unset !important;
+      width: unset !important;
+    }
+    .main-grid {
+      display: block !important;
+    }
+    /* Freccia back per la modalità confronto */
+    #backToOverviewBtn {
+      position: fixed;
+      top: 2px;
+      left: 10px;
+      z-index: 1001;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 2.2em;
+      cursor: pointer;
+      opacity: 0.85;
+      transition: opacity 0.2s;
+      display: none;
+    }
+    #backToOverviewBtn:hover {
+      opacity: 1;
+    }
+    
+   #confrontoLabelsBox {
+  position: fixed;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 70vw;
+  pointer-events: none;
+  z-index: 100;
+}
+
+#confrontoLabelsBox .confronto-label {
+  background: #222;
+  color: #f2f2f2;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.95em;
+  font-weight: normal;
+  padding: 6px 14px;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px #0006;
+  pointer-events: none;
+  border: 1px solid #444;
+  text-shadow: none;
+  letter-spacing: 0.04em;
+}
+
+
+
+    @media (max-width: 900px) {
+      #confrontoLabelsBox .confronto-label {
+        font-size: 1.3em !important;
+        padding: 10px 18px !important;
+        border-radius: 12px !important;
+      }
+      #confrontoLabelsBox {
+        padding: 0 4vw !important;
+      }
+    }
+    @media (max-width: 600px) {
+      #confrontoLabelsBox .confronto-label {
+        font-size: 1em !important;
+        padding: 6px 8px !important;
+        border-radius: 8px !important;
+      }
+      #confrontoLabelsBox {
+        padding: 0 2vw !important;
+      }
+    }
+    
+   .confronto-select {
+  position: fixed;
+  top: calc(20% + 2px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2147483647;
+
+  background-color: #2687e3;
+  color: white;
+  font-family: monospace;
+  font-size: 1rem;
+  padding: 6px 36px 6px 12px; /* spazio extra a destra per la freccia */
+  border: none;
+  border-radius: 6px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  cursor: pointer;
+
+  text-align: center;         /* ✅ centra orizzontalmente il testo */
+  line-height: 1.4;           /* ✅ migliora centratura verticale */
+
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  display: none;
+
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg fill='white' height='16' viewBox='0 0 24 24' width='16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 14px;
+}
+
+
+.confronto-select:hover,
+.confronto-select:focus {
+  background-color: #114781;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+  outline: none;
+  text-align: left ;         /* ✅ centra orizzontalmente il testo */
+  line-height: 1.4;           /* ✅ migliora centratura verticale */
+}
+
+ #compareBtn {
+    margin-top: 14px;
+    background: #0077ff;
+    color: #fff;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.93em;
+    padding: 7px 14px;
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 2px 12px #0007;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.25s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    display: block;
+  }
+
+  #compareBtn:hover {
+    background: #3399ff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px #0008;
+  }
+
+
+
+
   </style>
 </head>
 <body>
+  <button id="backToOverviewBtn" title="Torna alla panoramica" aria-label="Torna alla panoramica">&#8592;</button>
   <canvas id="three-canvas"></canvas>
   <div id="infoBox">
     <span class="info-placeholder" style="opacity:0.6;font-style:italic;">
@@ -232,49 +398,41 @@
   <div class="header-bar">
     <span class="center-title">Photographic Data Comparison Between Two Locations</span>
   </div>
-  <div id="vizTypeLabel">
-    Visualizzazione attuale: <b>generic overview</b>
-  </div>
+  
   <div id="sideMenu">
     <button id="closeSideMenu" title="Chiudi menu" aria-label="Chiudi menu">&times;</button>
     <b>Funzionamento visualizzazione</b> <br><br>
     <div style="margin-top:4px;">
       Ogni tubo rappresenta una foto e la sua posizione e direzione nello spazio 3D sono determinate da <b>hue</b>, <b>brightness</b> ed <b>exposure</b>, mappati su coordinate sferiche e poi convertiti in coordinate cartesiane.<br>
       <br>
-      <b>Come interagire:</b><br>
+      <b style="padding:12px 18px;">Come interagire:</b><br>
       <ul style="margin: 8px 0 0 18px; padding: 0; font-size: 0.97em;">
-        <li><b>Muovi il mouse</b> sopra il quadrato centrale per bloccare la rotazione automatica.</li>
+        <li><b>Muovi il mouse</b> sopra la sfera per rallentare la rotazione.</li>
         <li><b>Trascina</b> con il mouse per ruotare la visualizzazione 3D.</li>
         <li><b>Usa la rotellina</b> del mouse per zoomare avanti e indietro.</li>
         <li><b>Clicca su un tubo</b> per vedere i dettagli della foto a destra.</li>
         <li><b>Passa il mouse</b> sopra un tubo per evidenziarlo.</li>
       </ul>
-      <div style="margin-top:18px; background:#232323; color:#fff; border-radius:8px; padding:12px 18px; font-size:1em; box-shadow:0 2px 12px #0007;">
+      <div style="margin-top:18px; background:none; color:#fff; padding:12px 18px; font-size:1em;">
         Dopo aver analizzato la visualizzazione generale puoi entrare nel vivo del sito: <b>inizia il confronto tra i dati dei due periodi</b> per scoprire le differenze tra i contesti fotografici.
       </div>
-      <button id="compareBtn" style="
-        margin-top:14px;
-        background: #0077ff;
-        color: #fff;
-        font-family: 'IBM Plex Mono', monospace;
-        font-size: 1.08em;
-        padding: 10px 28px;
-        border-radius: 8px;
-        border: none;
-        box-shadow: 0 2px 12px #0007;
-        letter-spacing: 0.04em;
-        cursor: pointer;
-        font-weight: bold;
-        transition: background 0.2s;
-        display: block;
-      ">
-        Avvia confronto tra periodi
-      </button>
+      <button id="compareBtn">
+  Avvia confronto tra periodi
+</button>
     </div>
   </div>
   <button id="openSideMenu" title="Apri menu" aria-label="Apri menu">
-    <span style="display:inline-block; width:0; height:0; border-top:10px solid transparent; border-bottom:10px solid transparent; border-left:14px solid #fff; vertical-align:middle;"></span>
-  </button>
+  <span style="
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-left: 8px solid #ccc;
+    vertical-align: middle;
+  "></span>
+</button>
+
   <div class="footer-note">
     &copy; 2025 - Me, myself and AI - CV429.01 - Interaction design SP24/25.
   </div>
@@ -282,38 +440,52 @@
     <div>
       <h2 style="margin-top:0;font-size:1.4em;font-weight:bold;letter-spacing:0.04em;">Photographic Data Comparison Between Two Locations</h2>
       <p>
-        Welcome!<br>
-        <br>
-        This website presents interactive visualizations based on data extracted from 4,392 photographs taken across two geographical and temporal contexts: Naples (2017–2022) and Ticino (2022–present).<br>
-        <br>
-        Following an overview of the most relevant metadata, the site focuses on a comparative and creative exploration of key technical parameters — including ISO, exposure time, brightness, hue, and one distinctive variable of interest — to investigate how photographic data can reflect changes in context and perspective.
-        <br>
-        <br>
-        <span style="opacity:0.7;">
-          Premi <b>START</b> per entrare e interagire con la visualizzazione.<br>
-          Puoi ruotare e zoomare il grafico 3D.<br>
-        </span>
-      </p>
-      <button id="startBtn" style="
-        margin-top:22px; 
-        background:#ffffff00; 
-        color:#ffffff; 
-        border: 1px solid #ffffff; 
-        border-radius:7px; 
-        font-size:1.0em; 
-        font-family:inherit; 
-        font-weight: regular ; 
-        padding:12px 38px; 
-        cursor:pointer; 
-        box-shadow:0 2px 8px #0005;
-        transition:background 0.2s;
-      ">START</button>
+  Benvenuto!<br><br>
+  Questo sito presenta visualizzazioni interattive basate su dati estratti da 4.392 fotografie scattate in due contesti geografici e temporali distinti: Napoli (2017–2022) e Ticino (dal 2022 a oggi).<br><br>
+  Dopo una panoramica dei metadati generali, il sito propone un'esplorazione comparativa e creativa di alcuni parametri tecnici fondamentali — come ISO, tempo di esposizione, tinta dominante (Hue) e una variabile distintiva d'interesse — per indagare come i dati fotografici possano riflettere cambiamenti di contesto e di prospettiva.<br><br>
+  <span style="opacity:0.7;">
+    Premi <b>START</b> per entrare e interagire con la visualizzazione.<br>
+    Puoi ruotare e zoomare il grafico 3D.<br>
+  </span>
+</p>
+
+     <button id="startBtn">START</button>
     </div>
   </div>
+ <div id="comparisonBox" style="display: none; position: fixed; top: 80%; left: 50%; transform: translate(-50%, -50%); background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; text-align: center; font-family: monospace; color: white; z-index: 1000; backdrop-filter: blur(6px);">
+  <div id="parametri" style="display: none;"></div> <!-- lo nascondi, ma resta nel DOM -->
+  <div id="confrontoTestuale">Comparazione in corso...</div>
+</div>
+
+  
+  <select id="confrontoSelect" class="confronto-select">
+  <option value="" disabled selected>– Seleziona confronto –</option>
+  <option value="numeroFoto">Foto/Mese</option>
+  <option value="ISO">ISO</option>
+  <option value="ExposureTime">Exposure</option>
+  <option value="Hue">Hue</option>
+</select>
+
+
+<div id="transitionOverlay" style="
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,0.4), rgba(0,0,0,0.9));
+  opacity: 0;
+  z-index: 999;
+  pointer-events: none;
+  transition: opacity 1.2s ease;
+"></div>
+
+
+
+
   <div id="interaction-area"></div>
   <script>
     // --- Variabili globali ---
     let globalData = null;
+    let globalSummary = null;
     let isCompareMode = false;
     let mainThree = null; // per gestire la scena principale
     let compareThree = null; // per gestire la scena di confronto
@@ -387,21 +559,21 @@
         group.add(textMesh);
 
         // X-
-        textGeo = new THREE.TextGeometry('-Hue', { font, size: textSize, height: textHeight });
+        textGeo = new THREE.TextGeometry('- Hue', { font, size: textSize, height: textHeight });
         textMesh = new THREE.Mesh(textGeo, textMat);
         textMesh.position.set(-length - 90, 0, 0);
         textMesh.lookAt(0, 0, 0);
         group.add(textMesh);
 
         // Y+
-        textGeo = new THREE.TextGeometry('Brightness', { font, size: textSize, height: textHeight });
+        textGeo = new THREE.TextGeometry('- Brightness', { font, size: textSize, height: textHeight });
         textMesh = new THREE.Mesh(textGeo, textMat);
         textMesh.position.set(0, length + 30, 0);
         textMesh.lookAt(0, 0, 0);
         group.add(textMesh);
 
         // Y-
-        textGeo = new THREE.TextGeometry('-Brightness', { font, size: textSize, height: textHeight });
+        textGeo = new THREE.TextGeometry('Brightness', { font, size: textSize, height: textHeight });
         textMesh = new THREE.Mesh(textGeo, textMat);
         textMesh.position.set(0, -length - 90, 0);
         textMesh.lookAt(0, 0, 0);
@@ -415,7 +587,7 @@
         group.add(textMesh);
 
         // Z-
-        textGeo = new THREE.TextGeometry('-Exposure', { font, size: textSize, height: textHeight });
+        textGeo = new THREE.TextGeometry('- Exposure', { font, size: textSize, height: textHeight });
         textMesh = new THREE.Mesh(textGeo, textMat);
         textMesh.position.set(0, 0, -length - 140);
         textMesh.lookAt(0, 0, 0);
@@ -429,7 +601,10 @@
       let compareCanvas = document.getElementById('compare-canvas');
       if (compareCanvas) {
         compareCanvas.parentNode.removeChild(compareCanvas);
-        compareThree = null;
+        if (compareThree && compareThree.renderer) {
+          compareThree.renderer.dispose();
+          compareThree = null;
+        }
       }
       // Mostra canvas principale
       const canvas = document.getElementById('three-canvas');
@@ -440,7 +615,12 @@
         mainThree.renderer.dispose();
         mainThree = null;
       }
+      // Pulizia DOM: rimuovi tutti i figli dal canvas (se Three.js ne avesse aggiunti)
+      while (canvas.nextSibling && canvas.nextSibling.tagName === 'DIV') {
+        canvas.parentNode.removeChild(canvas.nextSibling);
+      }
 
+      // Crea nuovo renderer/scena
       const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
       renderer.setClearColor(0x111111, 0);
       renderer.setSize(window.innerWidth, window.innerHeight);
@@ -451,6 +631,14 @@
 
       const group = new THREE.Group();
       scene.add(group);
+
+      // --- PULIZIA: se la funzione viene richiamata più volte, assicurati che il gruppo sia vuoto ---
+      while (group.children.length > 0) {
+        const obj = group.children[0];
+        group.remove(obj);
+        if (obj.geometry) obj.geometry.dispose && obj.geometry.dispose();
+        if (obj.material) obj.material.dispose && obj.material.dispose();
+      }
 
       add3DAxesToGroup(group, 800);
 
@@ -606,16 +794,32 @@
       updateTubesOpacity();
 
       function showTubeInfo(entry) {
-        const infoBox = document.getElementById('infoBox');
-        infoBox.innerHTML = `
-          <div>
-            <b>Hue:</b> ${entry.colors ? hexToHSL(entry.colors[0]).h.toFixed(1) : 'N/A'}<br>
-            <b>Brightness:</b> ${entry.colors ? computeBrightness(hexToRgb(entry.colors[0])).toFixed(2) : 'N/A'}<br>
-            <b>Exposure:</b> ${entry.ExposureTime || 'N/A'}<br>
-            <b>Colore dominante:</b> <span style="display:inline-block;width:18px;height:18px;background:${entry.colors ? entry.colors[0] : '#fff'};border-radius:3px;vertical-align:middle;margin-left:4px;"></span> ${entry.colors ? entry.colors[0] : 'N/A'}
-          </div>
-        `;
-      }
+  const infoBox = document.getElementById('infoBox');
+
+  // Estrazione data e ora
+  const date = entry.date || 'N/A';
+  const hour = entry.date?.split("T")[1]?.substring(0,5) ||
+               (entry.fileName?.length >= 13 ? `${entry.fileName.substring(9,11)}:${entry.fileName.substring(11,13)}` : 'N/A');
+
+  // Determinazione periodo
+  const year = parseInt(entry.fileName?.substring(0, 4));
+  const period = !isNaN(year) ? (year <= 2021 ? 'Italia' : 'Svizzera') : 'N/A';
+
+  infoBox.innerHTML = `
+    <div>
+      <b>Hue:</b> ${entry.colors ? hexToHSL(entry.colors[0]).h.toFixed(1) : 'N/A'}<br>
+      <b>Brightness:</b> ${entry.colors ? computeBrightness(hexToRgb(entry.colors[0])).toFixed(2) : 'N/A'}<br>
+      <b>Exposure:</b> ${entry.ExposureTime || 'N/A'}<br>
+      <b>Colore dominante:</b>
+        <span style="display:inline-block;width:18px;height:18px;background:${entry.colors ? entry.colors[0] : '#fff'};border-radius:3px;vertical-align:middle;margin-left:4px;"></span>
+        ${entry.colors ? entry.colors[0] : 'N/A'}<br>
+      <b>Data:</b> ${date}<br>
+      <b>Ora:</b> ${hour}<br>
+      <b>Periodo:</b> ${period}
+    </div>
+  `;
+}
+
 
       function resize() {
         renderer.setSize(window.innerWidth, window.innerHeight);
@@ -652,9 +856,10 @@
 
     // --- Visualizzazione 3D di confronto ---
     function startThreeCompare(data) {
-      // Rimuovi canvas principale
+      console.log('[DEBUG] startThreeCompare chiamata!');
+      // Rimuovi canvas principale se presente
       const oldCanvas = document.getElementById('three-canvas');
-      oldCanvas.style.display = "none";
+      if (oldCanvas) oldCanvas.style.display = "none";
       // Rimuovi eventuale canvas di confronto precedente
       let compareCanvas = document.getElementById('compare-canvas');
       if (compareCanvas) {
@@ -699,10 +904,6 @@
       scene.add(groupNapoli);
       scene.add(groupTicino);
 
-      // Etichette assi per entrambi i gruppi
-      add3DAxesToGroup(groupNapoli, 800);
-      add3DAxesToGroup(groupTicino, 800);
-
       // Funzione per creare tubi
       function createTubes(group, data, colorOverride) {
         const rMin = 150;
@@ -737,103 +938,690 @@
       createTubes(groupNapoli, napoli);
       createTubes(groupTicino, ticino);
 
-      // Animazione di split: i gruppi partono dal centro e si separano verso sx/dx
-      let splitProgress = 0; // 0 = centro, 1 = completamente separati
-      const splitTarget = 600; // distanza finale dal centro
-      let animating = true;
+      // Nessun asse, nessuna animazione di split, solo visualizzazione statica
+      renderer.render(scene, camera);
 
-      function animate() {
-        requestAnimationFrame(animate);
-
-        if (animating && splitProgress < 1) {
-          splitProgress += 0.025; // velocità animazione
-          if (splitProgress > 1) splitProgress = 1;
-        }
-
-        // Applica la separazione smooth
-        groupNapoli.position.x = -splitTarget * Math.sin((Math.PI / 2) * splitProgress);
-        groupTicino.position.x = splitTarget * Math.sin((Math.PI / 2) * splitProgress);
-
-        renderer.render(scene, camera);
+      // Etichette 2D visibili sopra le sfere nella visualizzazione di confronto
+      let confrontoLabelsBox = document.getElementById('confrontoLabelsBox');
+      if (!confrontoLabelsBox) {
+        confrontoLabelsBox = document.createElement('div');
+        confrontoLabelsBox.id = 'confrontoLabelsBox';
+        document.body.appendChild(confrontoLabelsBox);
+      } else {
+        confrontoLabelsBox.innerHTML = '';
       }
-      animate();
+      confrontoLabelsBox.style.display = 'flex';
+      confrontoLabelsBox.style.position = 'fixed';
+      confrontoLabelsBox.style.left = '0';
+      confrontoLabelsBox.style.top = '0';
+      confrontoLabelsBox.style.width = '100vw';
+      confrontoLabelsBox.style.height = '100vh';
+      confrontoLabelsBox.style.pointerEvents = 'none';
+      confrontoLabelsBox.style.zIndex = '2147483647';
+      confrontoLabelsBox.style.justifyContent = 'space-between';
+      confrontoLabelsBox.style.alignItems = 'center';
+      confrontoLabelsBox.style.padding = '0 8vw';
+      confrontoLabelsBox.style.boxSizing = 'border-box';
+      confrontoLabelsBox.style.opacity = '1';
+      // Crea le due etichette SEMPRE
+     const labelNapoli = document.createElement('div');
+labelNapoli.textContent = 'Napoli';
+labelNapoli.className = 'confronto-label';
+confrontoLabelsBox.appendChild(labelNapoli);
 
-      // Resize responsive
-      function resize() {
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-      }
-      window.addEventListener('resize', resize);
-      resize();
+const labelTicino = document.createElement('div');
+labelTicino.textContent = 'Ticino';
+labelTicino.className = 'confronto-label';
+confrontoLabelsBox.appendChild(labelTicino);
+
+      // Log per debug
+      console.log('[DEBUG] Etichette confronto create nel DOM:', confrontoLabelsBox, labelNapoli, labelTicino);
 
       // Salva riferimenti per pulizia
       compareThree = { renderer, scene, camera, groupNapoli, groupTicino };
     }
 
     // --- GESTIONE CONFRONTO PERIODI ---
-    function startCompareView() {
-      isCompareMode = true;
-      // Nascondi tutto il resto (menu, info, ecc)
-      document.getElementById('sideMenu').style.display = "none";
-      document.getElementById('infoBox').style.display = "none";
-      document.getElementById('vizTypeLabel').innerHTML = 'Visualizzazione attuale: <b>confronto Napoli / Ticino</b>';
+   function startCompareView() {
+  console.log('[DEBUG] startCompareView chiamata!');
+  isCompareMode = true;
 
-      // Prendi il gruppo principale della scena 3D
-      if (!mainThree || !mainThree.group) return;
+  // Attiva animazione con overlay
+  const overlay = document.getElementById('transitionOverlay');
+  overlay.style.opacity = '1';
 
-      // Split dei dati
-      const { napoli, ticino } = splitDataByPeriod(globalData);
+  // Dopo breve delay, cambia visualizzazione
+  setTimeout(() => {
+    document.getElementById('confrontoSelect').style.display = "block";
+    document.getElementById('sideMenu').style.display = "none";
+    document.getElementById('infoBox').style.display = "none";
+  
+    document.getElementById('three-canvas').style.display = "none";
+    document.getElementById('openSideMenu').style.display = "none";
+    
+    const footer = document.querySelector('.footer-note');
+    if (footer) footer.style.display = "none";
 
-      // Prepara set di id per riconoscere i periodi
-      const napoliSet = new Set(napoli.map(e => e.id || e.ID || e.idx));
-      const ticinoSet = new Set(ticino.map(e => e.id || e.ID || e.idx));
+    const overlayIntro = document.getElementById('intro-overlay');
+    if (overlayIntro) overlayIntro.style.display = "none";
 
-      // Seleziona solo i tubi (Mesh che NON sono TextGeometry)
-      const meshes = mainThree.group.children.filter(obj =>
-        obj.type === "Mesh" && (!obj.geometry.type || obj.geometry.type !== "TextGeometry")
-      );
+    const interaction = document.getElementById('interaction-area');
+    if (interaction) interaction.style.display = "none";
 
-      // Nascondi assi e etichette (Line e TextGeometry)
-      mainThree.group.children.forEach(obj => {
-        if (obj.type === "Line" ||
-            (obj.type === "Mesh" && obj.geometry && obj.geometry.type === "TextGeometry")) {
-          obj.visible = false;
-        }
-      });
+    document.getElementById('backToOverviewBtn').style.display = "block";
+    document.getElementById('comparisonBox').style.display = "block";
 
-      // Animazione di split
-      let splitProgress = 0;
-      const splitTarget = 600;
-      function animateSplit() {
-        splitProgress += 0.025;
-        if (splitProgress > 1) splitProgress = 1;
+    // Avvia la visualizzazione
+    // startCompareViewPagina1(globalData);
+const confrontoSelect = document.getElementById('confrontoSelect');
+if (confrontoSelect) {
+  confrontoSelect.value = "";
+}
+const boxTesto = document.getElementById("confrontoTestuale");
+boxTesto.innerHTML = `
+  <div style="margin-bottom: 10px; font-size: 1.05em; font-weight: bold;">
+    Sezione confronto tra periodi
+  </div>
+  <div style="font-size: 0.98em; opacity: 0.8;">
+    In questa sezione puoi confrontare i dati fotografici tra Napoli (2017–2022) e Ticino (dal 2022).<br>
+    Scegli dal menu in alto il parametro che vuoi confrontare.<br>
+    Verrà visualizzata una rappresentazione 3D interattiva per ogni confronto selezionato.
+  </div>
+`;
 
-        meshes.forEach(mesh => {
-          const entry = mesh.userData.entry;
-          const id = entry.id || entry.ID || entry.idx;
-          let direction = 0;
-          if (napoliSet.has(id)) direction = -1;
-          else if (ticinoSet.has(id)) direction = 1;
-          mesh.position.x = direction * splitTarget * Math.sin((Math.PI / 2) * splitProgress);
-        });
+    // Rimuovi overlay gradualmente
+    setTimeout(() => {
+      overlay.style.opacity = '0';
+    }, 900);
+  }, 500); // delay prima di eseguire la transizione logica
+}
 
-        mainThree.renderer.render(mainThree.scene, mainThree.camera);
 
-        if (splitProgress < 1) {
-          requestAnimationFrame(animateSplit);
-        }
-      }
-      animateSplit();
+    // Funzione di comparazione importata da pagina1.html
+function startCompareViewPagina1(data) {
+  document.querySelector("#three-canvas")?.remove();
+  const canvas = document.createElement("canvas");
+  canvas.id = "three-canvas";
+  document.body.appendChild(canvas);
+
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 3000);
+  camera.position.z = 1600;
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true, canvas });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  const group = new THREE.Group();
+  scene.add(group);
+
+  const italia = data.filter(d => parseInt(d.fileName?.substring(0, 4)) <= 2021);
+  const svizzera = data.filter(d => parseInt(d.fileName?.substring(0, 4)) >= 2022);
+
+  function analizzaDati(foto) {
+    let perMese = {};
+    foto.forEach(d => {
+      const nome = d.fileName;
+      if (!nome) return;
+      try {
+        const date = new Date(nome.substring(0, 4), nome.substring(4, 6) - 1);
+        const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+        perMese[key] = (perMese[key] || 0) + 1;
+      } catch {}
+    });
+    const tot = foto.length;
+    const media = tot / Object.keys(perMese).length;
+    return { tot, media };
+  }
+
+  const statsItalia = analizzaDati(italia);
+  const statsSvizzera = analizzaDati(svizzera);
+
+  function creaSfera(offsetX, mediaMensile) {
+    const raggio = 300;
+    const geo = new THREE.SphereGeometry(raggio, 64, 64);
+    const mat = new THREE.MeshStandardMaterial({
+      color: "#ffffff",
+      roughness: 0.5,
+      metalness: 0.3,
+      emissive: "#ffffff",
+      emissiveIntensity: 0.0
+    });
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.position.x = offsetX;
+    mesh.userData = { mediaMensile, material: mat };
+    group.add(mesh);
+    return mesh;
+  }
+
+  const distanzaX = 1000;
+  const sferaIT = creaSfera(-distanzaX, statsItalia.media);
+  const sferaCH = creaSfera(distanzaX, statsSvizzera.media);
+
+  const light = new THREE.PointLight(0xffffff, 0.5);
+  light.position.set(0, 0, 2200);
+  scene.add(light);
+
+  // Etichette
+  let confrontoLabelsBox = document.getElementById("confrontoLabelsBox");
+  if (!confrontoLabelsBox) {
+    confrontoLabelsBox = document.createElement("div");
+    confrontoLabelsBox.id = "confrontoLabelsBox";
+    document.body.appendChild(confrontoLabelsBox);
+  } else {
+    confrontoLabelsBox.innerHTML = '';
+  }
+  confrontoLabelsBox.style.display = 'flex';
+
+  const labelNapoli = document.createElement('div');
+  labelNapoli.textContent = 'Napoli';
+  labelNapoli.className = 'confronto-label';
+  confrontoLabelsBox.appendChild(labelNapoli);
+
+  const labelTicino = document.createElement('div');
+  labelTicino.textContent = 'Ticino';
+  labelTicino.className = 'confronto-label';
+  confrontoLabelsBox.appendChild(labelTicino);
+
+  // ✅ Box descrittivo aggiornato
+  const boxTesto = document.getElementById("confrontoTestuale");
+  boxTesto.innerHTML = `
+    <div style="margin-bottom: 8px; font-size: 0.95em; opacity: 0.8;">
+      L’intensità della luce pulsante è proporzionale alla <strong>frequenza mensile</strong> di scatto.
+    </div>
+    <div>
+      <strong>Napoli</strong>: 5.19 scatti al mese<br>
+      <strong>Ticino</strong>: 3.77 scatti al mese
+    </div>
+    <div style="margin-top: 6px; font-size: 1em; font-weight: bold;">
+      Nel periodo italiano ho scattato in media, mensilmente, il <span style="color:#1b6cc3; font-weight:bold;">27.4%</span> di volte in più rispetto al periodo svizzero.
+    </div>
+  `;
+
+  // Animazione lampeggio
+  let t = 0;
+  function animate() {
+    requestAnimationFrame(animate);
+    t += 0.02;
+
+    [sferaIT, sferaCH].forEach(sfera => {
+      const { mediaMensile, material } = sfera.userData;
+      const freq = Math.min(mediaMensile / 40, 3);
+      const lampeggio = Math.abs(Math.sin(t * freq));
+      material.emissiveIntensity = 0.05 + lampeggio * 0.85;
+      sfera.rotation.y += 0.002;
+    });
+
+    renderer.render(scene, camera);
+  }
+
+  animate();
+}
+
+
+
+function startCompareParamView(data, parametro) {
+  document.querySelector("#three-canvas")?.remove();
+  const canvas = document.createElement("canvas");
+  canvas.id = "three-canvas";
+  document.body.appendChild(canvas);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 3000);
+  camera.position.z = 1600;
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true, canvas });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  const group = new THREE.Group();
+  scene.add(group);
+
+  // Suddivisione
+const napoli = data.filter(d => d.fileName && d[parametro] && parseInt(d.fileName.substring(0, 4)) <= 2021);
+const ticino = data.filter(d => d.fileName && d[parametro] && parseInt(d.fileName.substring(0, 4)) >= 2022);
+
+if (napoli.length === 0 || ticino.length === 0) {
+  document.getElementById("confrontoTestuale").innerHTML = "Dati insufficienti per il confronto.";
+  return;
+}
+
+  // Medie ISO
+  const mediaNapoli = napoli.reduce((acc, d) => acc + d.ISO, 0) / napoli.length;
+  const mediaTicino = ticino.reduce((acc, d) => acc + d.ISO, 0) / ticino.length;
+
+  // Percentuale differenza
+  const diff = mediaTicino - mediaNapoli;
+  const perc = (diff / mediaNapoli) * 100;
+
+  // Crea sfera rumorosa
+function creaSferaRumorosa(x, mediaISO, fattoreJitter = 1, size = 2, opacity = 0.7, numPunti = 10000) {
+  const raggio = 300;
+  const geometria = new THREE.BufferGeometry();
+  const posizioni = new Float32Array(numPunti * 3);
+
+  for (let i = 0; i < numPunti; i++) {
+    const phi = Math.acos(2 * Math.random() - 1);
+    const theta = 2 * Math.PI * Math.random();
+    const jitter = (Math.random() - 0.5) * (mediaISO / 40) * fattoreJitter;
+    const rad = raggio + jitter;
+
+    const xPos = rad * Math.sin(phi) * Math.cos(theta);
+    const yPos = rad * Math.sin(phi) * Math.sin(theta);
+    const zPos = rad * Math.cos(phi);
+
+    posizioni[i * 3] = x + xPos;
+    posizioni[i * 3 + 1] = yPos;
+    posizioni[i * 3 + 2] = zPos;
+  }
+
+geometria.setAttribute("position", new THREE.BufferAttribute(posizioni, 3));
+const materiale = new THREE.PointsMaterial({ color: 0xffffff, size: size, transparent: true, opacity: opacity });
+const punti = new THREE.Points(geometria, materiale);
+
+// Salva posizione originale per animazione
+punti.userData = {
+  basePositions: posizioni.slice(),
+  fattoreJitter
+};
+
+group.add(punti);
+
+}
+
+const distanzaX = 1000; // valore calibrato a occhio per centratura visiva
+
+  // Napoli → meno punti, meno jitter
+creaSferaRumorosa(-distanzaX, mediaNapoli, 0.15, 2, 0.7, 6000);
+
+// Ticino → molti punti, jitter più forte
+creaSferaRumorosa(distanzaX, mediaTicino, 2.5, 2, 0.7, 12000);
+
+
+
+
+  // Luce
+  const light = new THREE.PointLight(0xffffff, 1.2);
+  light.position.set(0, 0, 1400);
+  scene.add(light);
+
+  // Etichette
+  let confrontoLabelsBox = document.getElementById("confrontoLabelsBox");
+  if (!confrontoLabelsBox) {
+    confrontoLabelsBox = document.createElement("div");
+    confrontoLabelsBox.id = "confrontoLabelsBox";
+    document.body.appendChild(confrontoLabelsBox);
+  } else {
+    confrontoLabelsBox.innerHTML = '';
+  }
+  confrontoLabelsBox.style.display = 'flex';
+
+  const labelNapoli = document.createElement('div');
+  labelNapoli.textContent = 'Napoli';
+  labelNapoli.className = 'confronto-label';
+  confrontoLabelsBox.appendChild(labelNapoli);
+
+  const labelTicino = document.createElement('div');
+  labelTicino.textContent = 'Ticino';
+  labelTicino.className = 'confronto-label';
+  confrontoLabelsBox.appendChild(labelTicino);
+
+  // Aggiorna testo in basso
+  const boxTesto = document.getElementById("confrontoTestuale");
+  boxTesto.innerHTML = `
+    <div style="margin-bottom: 8px; font-size: 0.95em; opacity: 0.8;">
+      Le sfere mostrano la grana digitale causata dall’ISO medio.<br>
+      Più rumore = ISO più alto.
+    </div>
+    <div>
+      <strong>Napoli</strong>: ISO medio ${mediaNapoli.toFixed(2)}<br>
+      <strong>Ticino</strong>: ISO medio ${mediaTicino.toFixed(2)}
+    </div>
+    <div style="margin-top: 6px; font-size: 1em; font-weight: bold;">
+      Le foto del periodo in Ticino hanno il <span style="color:#1b6cc3; font-weight:bold;">${perc.toFixed(1)}%</span> in più di disturbo/ISO rispetto a Napoli.
+    </div>
+  `;
+
+  function animate() {
+  requestAnimationFrame(animate);
+
+  group.children.forEach(punti => {
+    const posizione = punti.geometry.attributes.position;
+    const base = punti.userData.basePositions;
+    const jitter = punti.userData.fattoreJitter;
+
+    for (let i = 0; i < posizione.count; i++) {
+      const t = performance.now() * 0.001;
+      const amp = 1.5 * jitter; // ampiezza movimento
+      const freq = 0.7 + jitter; // frequenza
+
+      posizione.array[i * 3]     = base[i * 3]     + Math.sin(t + i) * amp;
+      posizione.array[i * 3 + 1] = base[i * 3 + 1] + Math.cos(t + i) * amp;
+      posizione.array[i * 3 + 2] = base[i * 3 + 2] + Math.sin(t * freq + i) * amp;
     }
 
-    // --- Caricamento dati e avvio ---
-    fetch("assets/dataset_fotografie_completo.json")
-      .then(res => res.json())
-      .then(json => {
-        globalData = Array.isArray(json) ? json : json.all;
-        startThreeExplode(globalData);
+    posizione.needsUpdate = true;
+  });
+
+  renderer.render(scene, camera);
+}
+animate();
+
+}
+
+function startCompareExposureView(data) {
+  document.querySelector("#three-canvas")?.remove();
+  const canvas = document.createElement("canvas");
+  canvas.id = "three-canvas";
+  document.body.appendChild(canvas);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 3000);
+  camera.position.z = 1600;
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true, canvas, alpha: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  const group = new THREE.Group();
+  scene.add(group);
+
+  // Filtro dei dati
+  const napoli = data.filter(d => d.fileName && d.ExposureTime && parseInt(d.fileName.substring(0, 4)) <= 2021);
+  const ticino = data.filter(d => d.fileName && d.ExposureTime && parseInt(d.fileName.substring(0, 4)) >= 2022);
+
+  if (napoli.length === 0 || ticino.length === 0) {
+    document.getElementById("confrontoTestuale").innerHTML = "Dati insufficienti per il confronto.";
+    return;
+  }
+
+  const mediaNapoli = napoli.reduce((acc, d) => acc + d.ExposureTime, 0) / napoli.length;
+  const mediaTicino = ticino.reduce((acc, d) => acc + d.ExposureTime, 0) / ticino.length;
+  const perc = ((mediaTicino - mediaNapoli) / mediaNapoli) * 100;
+
+  const distanzaX = 1000;
+  const geometry = new THREE.SphereGeometry(300, 64, 64);
+
+  const baseMaterial = new THREE.MeshStandardMaterial({
+    color: 0xffffff,
+    roughness: 0.2,
+    metalness: 0.0,
+    emissive: 0xffffff,
+    transparent: true
+  });
+
+  // === Napoli ===
+  const napoliGroup = new THREE.Group();
+  for (let i = 0; i < 3; i++) {
+    const mat = baseMaterial.clone();
+    mat.opacity = 0.5;
+    mat.emissiveIntensity = 0.3; // meno luminosa
+
+    const mesh = new THREE.Mesh(geometry, mat);
+    mesh.userData.offset = {
+      dx: Math.random() * 1000,
+      dy: Math.random() * 1000,
+      dz: Math.random() * 1000
+    };
+    napoliGroup.add(mesh);
+  }
+  napoliGroup.position.x = -distanzaX;
+  group.add(napoliGroup);
+
+  // === Ticino ===
+  const ticinoGroup = new THREE.Group();
+  for (let i = 0; i < 6; i++) {
+    const mat = baseMaterial.clone();
+    mat.opacity = 0.5;
+    mat.emissiveIntensity = 1.2; // più luminosa
+
+    const mesh = new THREE.Mesh(geometry, mat);
+    mesh.userData.offset = {
+      dx: Math.random() * 1000,
+      dy: Math.random() * 1000,
+      dz: Math.random() * 1000
+    };
+    ticinoGroup.add(mesh);
+  }
+  ticinoGroup.position.x = distanzaX;
+  group.add(ticinoGroup);
+
+  // === Luce
+  const light = new THREE.PointLight(0xffffff, 1.5);
+  light.position.set(0, 0, 1600);
+  scene.add(light);
+
+  // === Etichette
+  let confrontoLabelsBox = document.getElementById("confrontoLabelsBox");
+  if (!confrontoLabelsBox) {
+    confrontoLabelsBox = document.createElement("div");
+    confrontoLabelsBox.id = "confrontoLabelsBox";
+    document.body.appendChild(confrontoLabelsBox);
+  } else {
+    confrontoLabelsBox.innerHTML = '';
+  }
+  confrontoLabelsBox.style.display = 'flex';
+
+  const labelNapoli = document.createElement('div');
+  labelNapoli.textContent = 'Napoli';
+  labelNapoli.className = 'confronto-label';
+  confrontoLabelsBox.appendChild(labelNapoli);
+
+  const labelTicino = document.createElement('div');
+  labelTicino.textContent = 'Ticino';
+  labelTicino.className = 'confronto-label';
+  confrontoLabelsBox.appendChild(labelTicino);
+
+  // === Testo comparativo
+  const boxTesto = document.getElementById("confrontoTestuale");
+  boxTesto.innerHTML = `
+    <div style="margin-bottom: 8px; font-size: 0.95em; opacity: 0.8;">
+      Le sfere rappresentano la nitidezza di un soggetto in movimento.<br>
+      Una maggiore esposizione genera una percezione visiva di movimento.
+    </div>
+    <div>
+      <strong>Napoli</strong>: Exposure medio ${mediaNapoli.toFixed(4)} s<br>
+      <strong>Ticino</strong>: Exposure medio ${mediaTicino.toFixed(4)} s
+    </div>
+    <div style="margin-top: 6px; font-size: 1em; font-weight: bold;">
+      Le foto del periodo Ticino hanno un tempo di esposizione superiore del <span style="color:#1b6cc3; font-weight:bold;">${perc.toFixed(1)}%</span> rispetto alle foto del periodo di Napoli.
+    </div>
+  `;
+
+  // === Animazione
+  function animate() {
+    requestAnimationFrame(animate);
+    const t = performance.now() * 0.001;
+
+    // Napoli – più lenta
+    napoliGroup.children.forEach(s => {
+  const o = s.userData.offset;
+  s.position.set(
+    Math.sin(t * 0.02 + o.dx) * 0.05,
+    Math.cos(t * 0.015 + o.dy) * 0.05,
+    Math.sin(t * 0.01 + o.dz) * 0.05
+  );
+});
+
+
+    // Ticino – più veloce
+    ticinoGroup.children.forEach(s => {
+      const o = s.userData.offset;
+      s.position.set(
+        Math.sin(t + o.dx) * 2,
+        Math.cos(t * 1.1 + o.dy) * 2,
+        Math.sin(t * 1.4 + o.dz) * 2
+      );
+    });
+
+    renderer.render(scene, camera);
+  }
+  animate();
+}
+
+let retryHueAttempts = 0;
+
+function startCompareHueView(data) {
+  if (!globalSummary || !globalSummary.italia || !globalSummary.svizzera) {
+    console.warn("[Hue] Summary non disponibile.");
+    return;
+  }
+
+  document.querySelector("#three-canvas")?.remove();
+  const canvas = document.createElement("canvas");
+  canvas.id = "three-canvas";
+  document.body.appendChild(canvas);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 3000);
+  camera.position.z = 1600; // ✅ uguale alle altre visualizzazioni
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true, canvas });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  const radius = 300; // ✅ uguale alle altre visualizzazioni
+  const segments = 12;
+  const diffSector = 6; // ✅ settore Hue ~160°, presente solo in Svizzera
+
+  const getHueBinsFromTopColors = (topColors) => {
+    const bins = Array(segments).fill(0);
+    topColors.forEach(hex => {
+      if (!hex) return;
+      const h = hexToHue(hex);
+      const bin = Math.floor(h / (360 / segments)) % segments;
+      bins[bin]++;
+    });
+    const total = topColors.length || 1;
+    return bins.map(c => c / total);
+  };
+
+  const binsItalia = getHueBinsFromTopColors(globalSummary.italia.topColors);
+  const binsSvizzera = getHueBinsFromTopColors(globalSummary.svizzera.topColors);
+
+  function createHueGlobe(xOffset, binData, highlightDiff = false) {
+    const globe = new THREE.Group();
+
+    for (let i = 0; i < segments; i++) {
+      const thetaStart = (i / segments) * Math.PI * 2;
+      const thetaLength = (1 / segments) * Math.PI * 2;
+      const geometry = new THREE.SphereGeometry(radius, 64, 64, thetaStart, thetaLength, 0, Math.PI);
+
+      const hue = i * (360 / segments);
+      const color = new THREE.Color(`hsl(${hue}, 100%, 50%)`);
+
+      let opacity = 0.15;
+      let intensity = 0.15;
+
+      if (highlightDiff && i === diffSector) {
+        opacity = 1.0;
+        intensity = 3.5;
+      }
+
+      const material = new THREE.MeshStandardMaterial({
+        color: color,
+        emissive: color,
+        emissiveIntensity: intensity,
+        transparent: true,
+        opacity: opacity,
+        roughness: 0.4,
+        metalness: 0.2,
       });
+
+      const slice = new THREE.Mesh(geometry, material);
+      globe.add(slice);
+    }
+
+    globe.rotation.y = Math.PI / 2;
+    globe.position.x = xOffset;
+    scene.add(globe);
+    return globe;
+  }
+
+  const globeItalia = createHueGlobe(-1000, binsItalia, false);
+  const globeSvizzera = createHueGlobe(1000, binsSvizzera, true);
+
+  const light = new THREE.PointLight(0xffffff, 1.5);
+  light.position.set(0, 0, 1000); // ✅ coerente
+  scene.add(light);
+
+  // Etichette
+  let confrontoLabelsBox = document.getElementById("confrontoLabelsBox");
+  if (!confrontoLabelsBox) {
+    confrontoLabelsBox = document.createElement("div");
+    confrontoLabelsBox.id = "confrontoLabelsBox";
+    document.body.appendChild(confrontoLabelsBox);
+  } else {
+    confrontoLabelsBox.innerHTML = '';
+  }
+  confrontoLabelsBox.style.display = 'flex';
+
+  const labelNapoli = document.createElement('div');
+  labelNapoli.textContent = 'Napoli';
+  labelNapoli.className = 'confronto-label';
+  confrontoLabelsBox.appendChild(labelNapoli);
+
+  const labelTicino = document.createElement('div');
+  labelTicino.textContent = 'Ticino';
+  labelTicino.className = 'confronto-label';
+  confrontoLabelsBox.appendChild(labelTicino);
+
+  const boxTesto = document.getElementById("confrontoTestuale");
+  boxTesto.innerHTML = `
+    <div style="margin-bottom: 8px; font-size: 0.95em; opacity: 0.85;">
+      Le due sfere mostrano la distribuzione delle tinte dominanti (Hue) dei due periodi.<br>
+      Ogni sfera è divisa in 12 settori di 30° sulla ruota dei colori.<br>
+      Tutti i settori sono visibili con opacità ridotta per evidenziare meglio l’unica differenza.<br>
+      <span style="color:#1b6cc3; font-weight:bold;">Nella sfera Svizzera è evidenziata la tinta verde-blu (Hue ~160°)</span>, molto più presente rispetto alla palette italiana.
+    </div>
+  `;
+
+  function animate() {
+    requestAnimationFrame(animate);
+    globeItalia.rotation.y += 0.015;
+    globeSvizzera.rotation.y += 0.015;
+    renderer.render(scene, camera);
+  }
+
+  animate();
+}
+
+
+
+
+function hexToHue(hex) {
+  hex = hex.replace("#", "");
+  const r = parseInt(hex.substring(0, 2), 16) / 255;
+  const g = parseInt(hex.substring(2, 4), 16) / 255;
+  const b = parseInt(hex.substring(4, 6), 16) / 255;
+
+  const max = Math.max(r, g, b), min = Math.min(r, g, b);
+  let h;
+  if (max === min) {
+    h = 0;
+  } else if (max === r) {
+    h = (60 * ((g - b) / (max - min)) + 360) % 360;
+  } else if (max === g) {
+    h = (60 * ((b - r) / (max - min)) + 120) % 360;
+  } else {
+    h = (60 * ((r - g) / (max - min)) + 240) % 360;
+  }
+  return h;
+}
+
+
+
+
+
+
+    // Torna alla visualizzazione overview
+    document.getElementById('backToOverviewBtn').onclick = function() {
+      window.location.reload();
+    };
+    fetch("assets/dataset_fotografie_completo.json")
+  .then(res => res.json())
+  .then(json => {
+    globalData = Array.isArray(json) ? json : json.all;
+    globalSummary = json.summary || null; // 🔥 salva anche il summary
+    startThreeExplode(globalData); // non si tocca!
+  });
 
     // --- Overlay START ---
     document.addEventListener("DOMContentLoaded", function() {
@@ -872,6 +1660,28 @@
       const btn = document.getElementById('compareBtn');
       if (btn) btn.onclick = startCompareView;
     });
+
+    // ...esistente...
+
+// Gestione cambio confronto dal menu a tendina
+document.addEventListener("DOMContentLoaded", function() {
+  const confrontoSelect = document.getElementById("confrontoSelect");
+  if (confrontoSelect) {
+    confrontoSelect.onchange = (e) => {
+      const val = e.target.value;
+      if (!val) return;
+      if (val === "numeroFoto") {
+        startCompareViewPagina1(globalData);
+      } else if (val === "ExposureTime") {
+        startCompareExposureView(globalData);
+      } else if (val === "Hue") {
+        startCompareHueView(globalData);
+      } else {
+        startCompareParamView(globalData, val);
+      }
+    };
+  }
+});
   </script>
 </body>
 </html>
