@@ -6,7 +6,7 @@ Docenti: A. Gysin, G. Profeta
 
 Elaborato 1: Visualizzazione dati fotografici\
 Autore: Gennaro Esposito\
-🔗 [Due Luoghi, Una Lente](INSERISCI_LINK_GITHUB_PAGES)
+🔗 [Due Luoghi, Una Lente]([INSERISCI_LINK_GITHUB_PAGES](https://gennespo.github.io/Me_Myself_and_AI/))
 
 ---
 
