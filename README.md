@@ -6,7 +6,7 @@ Docenti: A. Gysin, G. Profeta
 
 Elaborato 1: Me, myself and AI
 Autore: Gennaro Esposito\
-🔗 [Due Luoghi, Una Lente](https://gennespo.github.io/Me_Myself_and_AI/)
+🔗 [Due Luoghi, Una Lente](https://gennespo.github.io/Due_Luoghi__Una_Lente/)
 
 ---
 
