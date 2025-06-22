@@ -1,10 +1,10 @@
 # Due Luoghi, Una Lente
 
 SUPSI 2025\
-Corso d'interaction design, CV428.01\
+Corso d'interaction design, CV429.01\
 Docenti: A. Gysin, G. Profeta
 
-Elaborato 1: Visualizzazione dati fotografici\
+Elaborato 1: Me, myself and AI
 Autore: Gennaro Esposito\
 🔗 [Due Luoghi, Una Lente](https://gennespo.github.io/Me_Myself_and_AI/)
 
