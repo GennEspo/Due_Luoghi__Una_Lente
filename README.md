@@ -130,10 +130,13 @@ Può essere utilizzato in ambito accademico o divulgativo per esplorare come i d
 
 ## Media di progetto
 
-- Sfera 3D esplorabile
-- Visualizzazioni comparative: ISO, Exposure, Hue, Emozioni
-- Dataset composto da 4.392 fotografie personali
-- Pre-processing con analisi semantica (emozioni)
+### ✨ Animazione introduttiva
+<img src="assets/Sfera.gif" width="500" alt="Animazione della sfera 3D" />
 
+### 📊 Confronto ISO
+<img src="assets/ISO.png" width="500" alt="Visualizzazione comparativa ISO" />
+
+### ⏱️ Confronto tempo di esposizione
+<img src="assets/Exposure.png" width="500" alt="Visualizzazione comparativa tempo di esposizione" />
 ---
 
