@@ -2,7 +2,8 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <title>Image Archive Data Visualization</title>
+  <title>Due Luoghi, Una Lente</title>
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.jsdelivr.net/npm/three@0.140.0/build/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.140.0/examples/js/loaders/FontLoader.js"></script>
@@ -23,7 +24,7 @@
     #three-canvas, #compare-canvas {
       position: fixed;
       left: 0; top: 0;
-      width: 100dvw; height: 100dvh;
+      width: 100vw; height: 100vh;
       z-index: 0;
       display: block;
       background: transparent;
@@ -396,7 +397,7 @@
     </span>
   </div>
   <div class="header-bar">
-    <span class="center-title">Photographic Data Comparison Between Two Locations</span>
+    <span class="center-title">Due Luoghi, Una Lente : Confronto dei dati fotografici tra due luoghi</span>
   </div>
   
   <div id="sideMenu">
@@ -414,8 +415,7 @@
         <li><b>Passa il mouse</b> sopra un tubo per evidenziarlo.</li>
       </ul>
       <div style="margin-top:18px; background:none; color:#fff; padding:12px 18px; font-size:1em;">
-        Dopo aver analizzato la visualizzazione generale puoi entrare nel vivo del sito: <b>inizia il confronto tra i dati dei due periodi</b> per scoprire le differenze tra i contesti fotografici.
-      </div>
+Dopo aver esplorato la visualizzazione generale, puoi approfondire le differenze: attiva il confronto diretto tra i due periodi fotografici per visualizzare e interpretare in modo comparato i dati raccolti a Napoli e in Ticino.      </div>
       <button id="compareBtn">
   Avvia confronto tra periodi
 </button>
@@ -438,11 +438,11 @@
   </div>
   <div id="intro-overlay">
     <div>
-      <h2 style="margin-top:0;font-size:1.4em;font-weight:bold;letter-spacing:0.04em;">Photographic Data Comparison Between Two Locations</h2>
+      <h2 style="margin-top:0;font-size:1.4em;font-weight:bold;letter-spacing:0.04em;">Due luoghi, una lente.</br> Confronto dei dati fotografici tra due luoghi</h2>
       <p>
   Benvenuto!<br><br>
   Questo sito presenta visualizzazioni interattive basate su dati estratti da 4.392 fotografie scattate in due contesti geografici e temporali distinti: Napoli (2017–2022) e Ticino (dal 2022 a oggi).<br><br>
-  Dopo una panoramica dei metadati generali, il sito propone un'esplorazione comparativa e creativa di alcuni parametri tecnici fondamentali — come ISO, tempo di esposizione, tinta dominante (Hue) e una variabile distintiva d'interesse — per indagare come i dati fotografici possano riflettere cambiamenti di contesto e di prospettiva.<br><br>
+Dopo una panoramica interattiva dei metadati generali, potrai confrontare in modo creativo e visivo alcuni parametri tecnici chiave — ISO, tempo di esposizione, tinta dominante (Hue) ed emozioni rilevate — per capire come i dati fotografici riflettano il cambiamento di contesto tra i due periodi analizzati.<br><br>
   <span style="opacity:0.7;">
     Premi <b>START</b> per entrare e interagire con la visualizzazione.<br>
     Puoi ruotare e zoomare il grafico 3D.<br>
@@ -464,6 +464,8 @@
   <option value="ISO">ISO</option>
   <option value="ExposureTime">Exposure</option>
   <option value="Hue">Hue</option>
+  <option value="emozioni">Confronto emozioni</option>
+
 </select>
 
 
@@ -1127,15 +1129,14 @@ function startCompareViewPagina1(data) {
   const boxTesto = document.getElementById("confrontoTestuale");
   boxTesto.innerHTML = `
     <div style="margin-bottom: 8px; font-size: 0.95em; opacity: 0.8;">
-      L’intensità della luce pulsante è proporzionale alla <strong>frequenza mensile</strong> di scatto.
+      La velocità della luce pulsante è proporzionale alla <strong>frequenza mensile</strong> di scatto.
     </div>
     <div>
       <strong>Napoli</strong>: 5.19 scatti al mese<br>
       <strong>Ticino</strong>: 3.77 scatti al mese
     </div>
     <div style="margin-top: 6px; font-size: 1em; font-weight: bold;">
-      Nel periodo italiano ho scattato in media, mensilmente, il <span style="color:#1b6cc3; font-weight:bold;">27.4%</span> di volte in più rispetto al periodo svizzero.
-    </div>
+In media, durante il periodo a Napoli ho scattato il <span style="color:#1b6cc3; font-weight:bold;">27.4%</span> di foto in più al mese rispetto al periodo trascorso in Ticino.    </div>
   `;
 
   // Animazione lampeggio
@@ -1269,15 +1270,16 @@ creaSferaRumorosa(distanzaX, mediaTicino, 2.5, 2, 0.7, 12000);
   const boxTesto = document.getElementById("confrontoTestuale");
   boxTesto.innerHTML = `
     <div style="margin-bottom: 8px; font-size: 0.95em; opacity: 0.8;">
-      Le sfere mostrano la grana digitale causata dall’ISO medio.<br>
-      Più rumore = ISO più alto.
+      Le sfere visualizzano il livello di rumore digitale, proporzionale all’ISO medio.
+<br>
+      Più "grana" = maggiore sensibilità ISO.
     </div>
     <div>
       <strong>Napoli</strong>: ISO medio ${mediaNapoli.toFixed(2)}<br>
       <strong>Ticino</strong>: ISO medio ${mediaTicino.toFixed(2)}
     </div>
     <div style="margin-top: 6px; font-size: 1em; font-weight: bold;">
-      Le foto del periodo in Ticino hanno il <span style="color:#1b6cc3; font-weight:bold;">${perc.toFixed(1)}%</span> in più di disturbo/ISO rispetto a Napoli.
+      Le foto scattate in Ticino presentano in media un livello di ISO superiore del <span style="color:#1b6cc3; font-weight:bold;">${perc.toFixed(1)}%</span> rispetto a quelle di Napoli.
     </div>
   `;
 
@@ -1414,16 +1416,15 @@ function startCompareExposureView(data) {
   const boxTesto = document.getElementById("confrontoTestuale");
   boxTesto.innerHTML = `
     <div style="margin-bottom: 8px; font-size: 0.95em; opacity: 0.8;">
-      Le sfere rappresentano la nitidezza di un soggetto in movimento.<br>
-      Una maggiore esposizione genera una percezione visiva di movimento.
+      Le sfere simboleggiano l’effetto visivo di movimento dato dal tempo di esposizione.<br>
+      Maggiore esposizione = immagini più "mosse".
     </div>
     <div>
       <strong>Napoli</strong>: Exposure medio ${mediaNapoli.toFixed(4)} s<br>
       <strong>Ticino</strong>: Exposure medio ${mediaTicino.toFixed(4)} s
     </div>
     <div style="margin-top: 6px; font-size: 1em; font-weight: bold;">
-      Le foto del periodo Ticino hanno un tempo di esposizione superiore del <span style="color:#1b6cc3; font-weight:bold;">${perc.toFixed(1)}%</span> rispetto alle foto del periodo di Napoli.
-    </div>
+Le foto scattate in Ticino hanno un tempo di esposizione superiore del <span style="color:#1b6cc3; font-weight:bold;">${perc.toFixed(1)}%</span> rispetto a Napoli, suggerendo un approccio più "lento" o riflessivo.    </div>
   `;
 
   // === Animazione
@@ -1567,10 +1568,9 @@ function startCompareHueView(data) {
   boxTesto.innerHTML = `
     <div style="margin-bottom: 8px; font-size: 0.95em; opacity: 0.85;">
       Le due sfere mostrano la distribuzione delle tinte dominanti (Hue) dei due periodi.<br>
-      Ogni sfera è divisa in 12 settori di 30° sulla ruota dei colori.<br>
-      Tutti i settori sono visibili con opacità ridotta per evidenziare meglio l’unica differenza.<br>
-      <span style="color:#1b6cc3; font-weight:bold;">Nella sfera Svizzera è evidenziata la tinta verde-blu (Hue ~160°)</span>, molto più presente rispetto alla palette italiana.
-    </div>
+      Ogni sfera è suddivisa in 12 settori da 30°, ciascuno rappresenta una fascia di Hue (tinta dominante).<br>
+Tutti i settori sono visibili con bassa opacità, ma solo quelli distintivi sono evidenziati.<br>
+<span style="color:#1b6cc3; font-weight:bold;">Nella sfera Svizzera emerge chiaramente una tinta verde-acquatica (Hue ~160°), molto più frequente rispetto alla palette italiana.</span>    </div>
   `;
 
   function animate() {
@@ -1582,9 +1582,6 @@ function startCompareHueView(data) {
 
   animate();
 }
-
-
-
 
 function hexToHue(hex) {
   hex = hex.replace("#", "");
@@ -1606,6 +1603,197 @@ function hexToHue(hex) {
   return h;
 }
 
+console.log("globalData", globalData);
+
+function startCompareEmotionView() {
+  if (!globalEmotionData || globalEmotionData.length === 0) {
+    console.error("Dati emozionali non disponibili.");
+    document.getElementById("confrontoTestuale").innerHTML = "Dati emozionali non disponibili.";
+    return;
+  }
+
+  document.querySelector("#three-canvas")?.remove();
+  const canvas = document.createElement("canvas");
+  canvas.id = "three-canvas";
+  document.body.appendChild(canvas);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 3000);
+  camera.position.z = 1600;
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true, canvas });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  const radius = 300;
+  const gridSize = 30; // 30x30 = 900 blocchi
+  const totalBlocks = gridSize * gridSize;
+
+  const emotions = ["happy", "sad", "angry", "disgust", "neutral"];
+  const emotionLabels = {
+    happy: "Felicità", sad: "Tristezza", angry: "Rabbia",
+    disgust: "Disgusto", neutral: "Neutrale"
+  };
+  const emotionColors = {
+    happy: "#00cc66", sad: "#3399ff", angry: "#9900cc",
+    disgust: "#ff9933", neutral: "#cccccc"
+  };
+
+  const italia = globalEmotionData.filter(d => d.period === "italia");
+  const svizzera = globalEmotionData.filter(d => d.period === "svizzera");
+
+  function countEmotions(entries) {
+    const counts = Object.fromEntries(emotions.map(e => [e, 0]));
+    entries.forEach(d => {
+      const emo = d.emotion;
+      if (emotions.includes(emo)) counts[emo]++;
+    });
+    return counts;
+  }
+
+  function toPercent(counts) {
+    const total = Object.values(counts).reduce((a, b) => a + b, 0);
+    const perc = {};
+    emotions.forEach(e => {
+      perc[e] = total ? counts[e] / total : 0;
+    });
+    return perc;
+  }
+
+  function computeBlocks(percents) {
+    const raw = emotions.map(e => [e, percents[e] * totalBlocks]);
+    const rounded = {};
+    let total = 0;
+    raw.forEach(([e, val]) => {
+      rounded[e] = Math.floor(val);
+      total += rounded[e];
+    });
+    let leftover = totalBlocks - total;
+    raw.sort((a, b) => b[1] % 1 - a[1] % 1);
+    for (let i = 0; i < leftover; i++) {
+      rounded[raw[i][0]]++;
+    }
+    return rounded;
+  }
+
+  function createBlockSphere(xOffset, percents) {
+    const blocks = computeBlocks(percents);
+    const group = new THREE.Group();
+
+    const phiStep = Math.PI / gridSize;
+    const thetaStep = (2 * Math.PI) / gridSize;
+
+    let blockList = [];
+    emotions.forEach(e => {
+      for (let i = 0; i < blocks[e]; i++) blockList.push(e);
+    });
+
+    let index = 0;
+    for (let i = 0; i < gridSize; i++) {
+      const phi = i * phiStep;
+      for (let j = 0; j < gridSize; j++) {
+        if (index >= blockList.length) continue;
+        const e = blockList[index++];
+        const theta = j * thetaStep;
+
+        const phiNext = phi + phiStep;
+        const thetaNext = theta + thetaStep;
+
+        const geometry = new THREE.BufferGeometry();
+        const vertices = [];
+        [phi, phiNext].forEach(p => {
+          [theta, thetaNext].forEach(t => {
+            const x = radius * Math.sin(p) * Math.cos(t);
+            const y = radius * Math.cos(p);
+            const z = radius * Math.sin(p) * Math.sin(t);
+            vertices.push(x, y, z);
+          });
+        });
+        geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+        geometry.setIndex([0, 1, 2, 1, 2, 3]);
+
+        const material = new THREE.MeshBasicMaterial({
+          color: emotionColors[e],
+          side: THREE.DoubleSide,
+          transparent: true,
+          opacity: 1.0
+        });
+        const mesh = new THREE.Mesh(geometry, material);
+        group.add(mesh);
+      }
+    }
+
+    group.position.x = xOffset;
+    scene.add(group);
+    return group;
+  }
+
+  const percItalia = toPercent(countEmotions(italia));
+  const percSvizzera = toPercent(countEmotions(svizzera));
+
+  const sphereIT = createBlockSphere(-1000, percItalia);
+  const sphereCH = createBlockSphere(1000, percSvizzera);
+
+  const light = new THREE.AmbientLight(0xffffff, 1);
+  scene.add(light);
+
+  const boxTesto = document.getElementById("confrontoTestuale");
+ let html = `
+  <div style="margin-bottom: 8px; font-size: 0.95em; opacity: 0.8;">
+    <strong>Distribuzione media delle emozioni percepite nelle immagini</strong><br>
+    Ogni sfera è composta da settori colorati proporzionali alla presenza di emozioni come felicità, tristezza, sorpresa, rabbia...<br>
+    Per ciascuna emozione è riportata la percentuale nei due contesti:
+  </div>
+  <ul style="margin-bottom: 8px; font-size: 0.95em; opacity: 0.8;">
+    <!-- Qui puoi aggiungere gli <li> dinamicamente -->
+  </ul>
+`;
+  emotions.forEach(e => {
+    const pIT = (percItalia[e] * 100).toFixed(2);
+    const pCH = (percSvizzera[e] * 100).toFixed(2);
+    const diff = (pCH - pIT).toFixed(2);
+    html += `<li style="margin-bottom: 4px;">
+      <span style="display:inline-block;width:12px;height:12px;background:${emotionColors[e]};margin-right:5px;"></span>
+      <b>${emotionLabels[e]}</b>: ${pIT}% 🇮🇹 vs ${pCH}% 🇨🇭 
+      <span style="color:${diff > 0 ? 'green' : 'red'}; font-weight: bold;">
+        (${diff > 0 ? '+' : ''}${diff}%)
+      </span></li>`;
+  });
+  html += "</ul>";
+  boxTesto.innerHTML = html;
+
+  // Etichette
+  let confrontoLabelsBox = document.getElementById("confrontoLabelsBox");
+  if (!confrontoLabelsBox) {
+    confrontoLabelsBox = document.createElement("div");
+    confrontoLabelsBox.id = "confrontoLabelsBox";
+    document.body.appendChild(confrontoLabelsBox);
+  } else {
+    confrontoLabelsBox.innerHTML = '';
+  }
+  confrontoLabelsBox.style.display = 'flex';
+
+  const labelNapoli = document.createElement('div');
+  labelNapoli.textContent = 'Napoli';
+  labelNapoli.className = 'confronto-label';
+  confrontoLabelsBox.appendChild(labelNapoli);
+
+  const labelTicino = document.createElement('div');
+  labelTicino.textContent = 'Ticino';
+  labelTicino.className = 'confronto-label';
+  confrontoLabelsBox.appendChild(labelTicino);
+
+
+
+  function animate() {
+    requestAnimationFrame(animate);
+    sphereIT.rotation.y += 0.01;
+    sphereCH.rotation.y += 0.01;
+    renderer.render(scene, camera);
+  }
+  animate();
+}
+
+
 
 
 
@@ -1615,13 +1803,32 @@ function hexToHue(hex) {
     document.getElementById('backToOverviewBtn').onclick = function() {
       window.location.reload();
     };
-    fetch("assets/dataset_fotografie_completo.json")
-  .then(res => res.json())
+
+let globalEmotionData = null;
+
+fetch("assets/dataset_fotografie_completo.json")
+  .then(res => {
+    if (!res.ok) throw new Error("Errore nel fetch del dataset_fotografie_completo.json");
+    return res.json();
+  })
   .then(json => {
     globalData = Array.isArray(json) ? json : json.all;
-    globalSummary = json.summary || null; // 🔥 salva anche il summary
-    startThreeExplode(globalData); // non si tocca!
+    globalSummary = json.summary || null;
+    startThreeExplode(globalData); // Avvio della visualizzazione iniziale
+
+    // Caricamento dati emozionali dopo quelli principali
+    return fetch("assets/emotion_analysis_results.json");
+  })
+  .then(res => res.json())
+  .then(json => {
+    globalEmotionData = json;
+    console.log("[DEBUG] Dati emozioni caricati!", globalEmotionData);
+  })
+  .catch(err => {
+    console.error("Errore nel caricamento dei dati:", err);
   });
+
+
 
     // --- Overlay START ---
     document.addEventListener("DOMContentLoaded", function() {
@@ -1665,22 +1872,31 @@ function hexToHue(hex) {
 
 // Gestione cambio confronto dal menu a tendina
 document.addEventListener("DOMContentLoaded", function() {
-  const confrontoSelect = document.getElementById("confrontoSelect");
-  if (confrontoSelect) {
-    confrontoSelect.onchange = (e) => {
-      const val = e.target.value;
-      if (!val) return;
-      if (val === "numeroFoto") {
-        startCompareViewPagina1(globalData);
-      } else if (val === "ExposureTime") {
-        startCompareExposureView(globalData);
-      } else if (val === "Hue") {
-        startCompareHueView(globalData);
-      } else {
-        startCompareParamView(globalData, val);
-      }
-    };
+const confrontoSelect = document.getElementById("confrontoSelect");
+if (confrontoSelect) {
+  confrontoSelect.onchange = (e) => {
+    const val = e.target.value;
+    if (!val) return;
+
+    if (val === "numeroFoto") {
+      startCompareViewPagina1(globalData);
+    } else if (val === "ExposureTime") {
+      startCompareExposureView(globalData);
+    } else if (val === "Hue") {
+      startCompareHueView(globalData);
+    } else if (val === "emozioni") {
+  if (!globalEmotionData) {
+    alert("I dati delle emozioni non sono ancora stati caricati.");
+    return;
   }
+  startCompareEmotionView(); // ✅ corretto
+} else {
+      startCompareParamView(globalData, val);
+    }
+  };
+}
+
+
 });
   </script>
 </body>
